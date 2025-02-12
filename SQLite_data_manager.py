@@ -42,7 +42,7 @@ class Movie(Base):
 class SQLiteDataManager(DataManagerInterface):
     def __init__(self, db_file_name):
         # Create a engine for SQLite database
-        self.engine = create_engine(f"sqlite:///{db_file_name}")
+        self.engine = create_engine(f"sqlite:///data/{db_file_name}")
         # Create a database session 
         Session = sessionmaker(bind=self.engine)
         self.session = Session()
@@ -78,7 +78,27 @@ class SQLiteDataManager(DataManagerInterface):
             raise RuntimeError(f"Failed to add user: {str(e)}")
         except Exception as e:
             self.session.rollback()
-            raise Exception("Unexpected error while adding user")
+            raise Exception(f"Unexpected error while adding user: {str(e)}")
+
+
+    def add_movie(self, movie_name, movie_director, movie_year, movie_rating):
+        """ This function add a new movie in the database"""
+        try: 
+            new_movie = Movie(
+                            name=movie_name,
+                            director=movie_director,
+                            year=movie_year,
+                            rating=movie_rating 
+                        )
+            self.session.add(new_movie)
+            self.session.commit()
+            return new_movie
+        except SQLAlchemyError as e:
+            self.session.rollback()
+            raise RuntimeError(f"Failed to add user: {str(e)}")
+        except Exception as e:
+            self.session.rollback()
+            raise Exception(f"Unexpected error adding the movie: {str(e)}")
 
 
         
