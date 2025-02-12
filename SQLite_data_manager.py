@@ -16,6 +16,10 @@ class User(Base):
     name = Column(String(50), unique=True, nullable=False)
 
 
+    def __str__(self):
+        return f"id: {self.id}, name: {self.name}"
+
+
 class Movie(Base):
     __tablename__ = "movies"
 
@@ -27,16 +31,21 @@ class Movie(Base):
     id_user = Column(Integer, ForeignKey("users.id"), nullable=True)
 
 
-    def __init__(self, name, director, year, rating):
+    def __init__(self, name, director, year, rating, id_user):
         self.name = name
         self.director = director
         self.year = year
         self.rating = rating
+        self.id_user = id_user
         now_year = datetime.datetime.now().year
         if not 1000 <= self.year <= now_year:
             raise ValueError("invalid year")
         if not 0 <= self.rating <= 10:
             raise ValueError("invalid rating range")
+        
+    
+    def __str__(self):
+        return f"id: {self.id}, name: {self.name}, director: {self.director}, year: {self.year}"
 
 
 class SQLiteDataManager(DataMangerInterface):
@@ -59,9 +68,9 @@ class SQLiteDataManager(DataMangerInterface):
         return all_users
     
 
-    def get_user_movies(self, input_user_id: int):
+    def get_user_movies(self, search_id_user: int):
         """ This function a list of all movies of a specific user"""
-        user_movies = self.session.query(Movie).filter(user_id = input_user_id).all()
+        user_movies = self.session.query(Movie).filter(Movie.id_user == search_id_user).all()
         return user_movies
 
     
@@ -72,30 +81,24 @@ class SQLiteDataManager(DataMangerInterface):
             self.session.add(new_user)
             self.session.commit()
             return new_user
-        except SQLAlchemyError as e:
-            # Rollback changes in case of failure
-            self.session.rollback()
-            raise RuntimeError(f"Failed to add user: {str(e)}")
         except Exception as e:
             self.session.rollback()
             raise Exception(f"Unexpected error while adding user: {str(e)}")
 
 
-    def add_movie(self, movie_name, movie_director, movie_year, movie_rating):
+    def add_movie(self, movie_name, movie_director, movie_year, movie_rating, movie_id_user):
         """ This function add a new movie in the database"""
         try: 
             new_movie = Movie(
                             name=movie_name,
                             director=movie_director,
                             year=movie_year,
-                            rating=movie_rating 
+                            rating=movie_rating,
+                            id_user=movie_id_user 
                         )
             self.session.add(new_movie)
             self.session.commit()
             return new_movie
-        except SQLAlchemyError as e:
-            self.session.rollback()
-            raise RuntimeError(f"Failed to add user: {str(e)}")
         except Exception as e:
             self.session.rollback()
             raise Exception(f"Unexpected error adding the movie: {str(e)}")
