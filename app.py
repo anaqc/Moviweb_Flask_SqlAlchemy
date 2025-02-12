@@ -1,5 +1,5 @@
 from flask import Flask 
-from SQLite_data_manager import User, Movie, SQLiteDataManager
+from datamanager.SQLite_data_manager import SQLiteDataManager
 
 
 new_data_manager = SQLiteDataManager("dbmovie.sqlite")

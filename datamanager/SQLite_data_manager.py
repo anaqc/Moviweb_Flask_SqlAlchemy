@@ -1,8 +1,8 @@
 from sqlalchemy import create_engine
-from data_manager_interface import DataMangerInterface
+from datamanager.data_manager_interface import DataMangerInterface
 from sqlalchemy.orm import sessionmaker, declarative_base
-from movie import Movie
-from user import User
+from models.movie import Movie
+from models.user import User
 
 # Create base class for declarativr models
 Base = declarative_base()
