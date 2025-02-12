@@ -1,9 +1,7 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import declarative_base
 import datetime
-
-# Create base class for declarativr models
-Base = declarative_base()
+from base import Base
 
 
 class Movie(Base):

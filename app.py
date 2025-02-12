@@ -6,8 +6,8 @@ app = Flask(__name__)
 data_manager = SQLiteDataManager("moviwebapp.sqlite")
 
 
-#new_data_manager.add_user("elisa")
-#new_data_manager.add_movie("twilight", "Catherine Hardwicke", 2008, 10, 1)
+data_manager.add_user("elisa")
+data_manager.add_movie("twilight", "Catherine Hardwicke", 2008, 10, 1)
 # new_data_manager.add_movie("f", " Hake", 2008, 10, 1)
 # users = new_data_manager.get_all_users()
 # for user in users:
@@ -22,6 +22,13 @@ data_manager = SQLiteDataManager("moviwebapp.sqlite")
 @app.route("/")
 def home():
     return "Welcome to MovieWeb App!"
+
+
+@app.route("/users")
+def list_users():
+    """ This flask route list all users"""
+    users = data_manager.get_all_users()
+    return str(users)
 
 
 if __name__ == "__main__":

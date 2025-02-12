@@ -3,9 +3,8 @@ from datamanager.data_manager_interface import DataMangerInterface
 from sqlalchemy.orm import sessionmaker, declarative_base
 from models.movie import Movie
 from models.user import User
+from models.base import Base
 
-# Create base class for declarativr models
-Base = declarative_base()
 
 
 class SQLiteDataManager(DataMangerInterface):
@@ -16,7 +15,7 @@ class SQLiteDataManager(DataMangerInterface):
         Session = sessionmaker(bind=self.engine)
         self.session = Session()
         # Create base for declarative models
-        self.Base = declarative_base()
+        # self.Base = declarative_base()
         # create all tables..
         Base.metadata.create_all(self.engine)
 

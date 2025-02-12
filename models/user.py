@@ -1,9 +1,6 @@
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import declarative_base
-
-
-# Create base class for declarativr models
-Base = declarative_base()
+from base import Base
 
 
 class User(Base):
@@ -15,3 +12,5 @@ class User(Base):
 
     def __str__(self):
         return f"id: {self.id}, name: {self.name}"
+
+
