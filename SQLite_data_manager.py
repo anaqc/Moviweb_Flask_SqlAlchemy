@@ -1,7 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey
 from sqlalchemy.exc import SQLAlchemyError
-from data_manager_interface import DataManagerInterface
+from data_manager_interface import DataMangerInterface
 from sqlalchemy.orm import sessionmaker, declarative_base
 import datetime
 
@@ -10,14 +10,14 @@ Base = declarative_base()
 
 
 class User(Base):
-    __table__ = "users"
+    __tablename__ = "users"
 
-    id = Column(Integer, primary_key=True, autoincremet=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(50), unique=True, nullable=False)
 
 
 class Movie(Base):
-    __table__ = "movies"
+    __tablename__ = "movies"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(150))
@@ -39,7 +39,7 @@ class Movie(Base):
             raise ValueError("invalid rating range")
 
 
-class SQLiteDataManager(DataManagerInterface):
+class SQLiteDataManager(DataMangerInterface):
     def __init__(self, db_file_name):
         # Create a engine for SQLite database
         self.engine = create_engine(f"sqlite:///data/{db_file_name}")
@@ -52,7 +52,7 @@ class SQLiteDataManager(DataManagerInterface):
         Base.metadata.create_all(self.engine)
 
 
-    def get_all_users(self) -> list:
+    def get_all_users(self):
         """ This function return a list of all users 
         in the database"""
         all_users = self.session.query(User).all()
