@@ -48,3 +48,11 @@ class SQLiteDataManager(DataManagerInterface):
         self.Base = declarative_base()
         # create all tables..
         Base.metadata.create_all(self.engine)
+        
+    def get_all_users(self):
+        """ This function return a list of all users 
+        in the database"""
+        all_users = self.session.query(User).all()
+        return all_users
+    
+    
