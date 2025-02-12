@@ -92,4 +92,15 @@ class SQLiteDataManager(DataMangerInterface):
             self.session.commit()
             return True
         return False
+    
+
+    def delete_usser(self, user_id):
+        """ This function delete a specific user from
+        the database"""
+        user = self.session.query(User).get(user_id)
+        if user:
+            self.session.delete(user)
+            self.session.commit()
+            return True
+        return False
 
