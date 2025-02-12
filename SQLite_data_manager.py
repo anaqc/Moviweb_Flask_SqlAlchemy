@@ -123,5 +123,13 @@ class SQLiteDataManager(DataMangerInterface):
         return f"movie id {movie_id} not exist!"
 
 
+    def delete_movie(self, movie_id):
+        """ This function delete a specific movie from a 
+        the database"""
+        movie = self.session.query(Movie).get(movie_id)
+        if movie:
+            self.session.delete(movie)
+            self.session.commit()
+            return True
+        return False
 
-        
