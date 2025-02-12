@@ -12,3 +12,5 @@ for user in users:
 movies = new_data_manager.get_user_movies(1)
 for movie in movies:
     print(movie)
+
+new_data_manager.update_movie(movie_id=1, movie_name="Twilight")

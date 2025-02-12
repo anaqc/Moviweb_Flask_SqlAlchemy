@@ -104,4 +104,24 @@ class SQLiteDataManager(DataMangerInterface):
             raise Exception(f"Unexpected error adding the movie: {str(e)}")
 
 
+    def update_movie(self, movie_id: int, movie_name: str = None, movie_director: str = None,
+                      movie_year: int = None, movie_rating: int = None):
+        """ This function update the datails of a 
+        specific movie in the database"""
+        movie = self.session.query(Movie).get(movie_id)
+        if movie:
+            if movie_name:
+                movie.name = movie_name 
+            if movie_director:
+                movie.director = movie_director
+            if movie_year:
+                movie.year = movie_year
+            if movie_rating:
+                movie.rating = movie_rating
+            self.session.commit()
+            return movie
+        return f"movie id {movie_id} not exist!"
+
+
+
         
