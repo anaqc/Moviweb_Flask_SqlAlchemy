@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import create_engine, Column, Integer, String
+from sqlalchemy import create_engine, Column, Integer, String, ForeignKey
+from sqlalchemy.exc import SQLAlchemyError
 from data_manager_interface import DataManagerInterface
 from sqlalchemy.orm import sessionmaker, declarative_base
 import datetime
@@ -23,6 +24,7 @@ class Movie(Base):
     director = Column(String(100))
     year = Column(Integer)
     rating = Column(Integer)
+    id_user = Column(Integer, ForeignKey("users.id"), nullable=True)
 
 
     def __init__(self, name, director, year, rating):
@@ -48,11 +50,35 @@ class SQLiteDataManager(DataManagerInterface):
         self.Base = declarative_base()
         # create all tables..
         Base.metadata.create_all(self.engine)
-        
-    def get_all_users(self):
+
+
+    def get_all_users(self) -> list:
         """ This function return a list of all users 
         in the database"""
         all_users = self.session.query(User).all()
         return all_users
     
+
+    def get_user_movies(self, input_user_id: int):
+        """ This function a list of all movies of a specific user"""
+        user_movies = self.session.query(Movie).filter(user_id = input_user_id).all()
+        return user_movies
+
     
+    def add_user(self, user_name):
+        """ This function add a new user in the database"""
+        try: 
+            new_user = User(name=user_name)
+            self.session.add(new_user)
+            self.session.commit()
+            return new_user
+        except SQLAlchemyError as e:
+            # Rollback changes in case of failure
+            self.session.rollback()
+            raise RuntimeError(f"Failed to add user: {str(e)}")
+        except Exception as e:
+            self.session.rollback()
+            raise Exception("Unexpected error while adding user")
+
+
+        
