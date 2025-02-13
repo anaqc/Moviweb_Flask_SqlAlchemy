@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, render_template
 from datamanager.SQLite_data_manager import SQLiteDataManager
 
 
@@ -31,7 +31,7 @@ def list_users():
     """ This flask route list all users registered in 
     the MovieWeb App"""
     users = data_manager.get_all_users()
-    return users
+    return render_template("users.html", users=users)
 
 
 @app.route("/users/<int:user_id>")
