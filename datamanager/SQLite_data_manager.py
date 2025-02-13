@@ -38,9 +38,14 @@ class SQLiteDataManager(DataMangerInterface):
             return None 
         
     
-    def add_user(self, user_name):
+    def add_user(self, user_name: str):
         """ This function add a new user in the database"""
         try: 
+            if not user_name:
+                raise ValueError("User name must be a non-empty string")
+            user_name_exist = self.session.query(User).filter(User.name == user_name).first()
+            if user_name_exist:
+                return None
             new_user = User(name=user_name)
             self.session.add(new_user)
             self.session.commit()
