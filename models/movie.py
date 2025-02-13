@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import declarative_base
 import datetime
-from base import Base
+from models.base import Base
 
 
 class Movie(Base):

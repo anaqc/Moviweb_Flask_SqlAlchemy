@@ -1,10 +1,10 @@
 from sqlalchemy import create_engine
 from datamanager.data_manager_interface import DataMangerInterface
-from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm.exc import NoResultFound
 from models.movie import Movie
 from models.user import User
 from models.base import Base
-
 
 
 class SQLiteDataManager(DataMangerInterface):
@@ -29,9 +29,14 @@ class SQLiteDataManager(DataMangerInterface):
 
     def get_user_movies(self, search_id_user: int):
         """ This function a list of all movies of a specific user"""
-        user_movies = self.session.query(Movie).filter(Movie.id_user == search_id_user).all()
-        return user_movies
-
+        try:
+            # Check if user exist    
+            user  = self.session.query(User).filter(User.id == search_id_user).one()
+            user_movies = self.session.query(Movie).filter(Movie.id_user == search_id_user).all()
+            return user_movies
+        except NoResultFound:   
+            return None 
+        
     
     def add_user(self, user_name):
         """ This function add a new user in the database"""
