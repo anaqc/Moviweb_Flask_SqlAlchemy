@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Users - MovieWeb App</title>
+    </head>
+    <body>
+        <header>
+            <nav>
+                <a href="/add_user"> Add user</a>
+            </nav>
+            <h1>Users</h1>
+        </header>
+        <div class="form-container">
+            <form action="/add_user" method="post">
+                <label for="user_name"> User name: </label>
+                <input type="text" name="user_name" id="user_name">
+                <input type="submit" value="Add user">
+            </form>
+        </div>
+    </body>
+</html>
