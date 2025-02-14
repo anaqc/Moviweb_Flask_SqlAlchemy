@@ -41,23 +41,40 @@ def user_movies(user_id):
     return list_movies_user
     
 
-@app.route("/add_user",methods=["POST"])
+@app.route("/add_user",methods=["GET","POST"])
 def add_user():
     """ This route present a form that enables the addiotion
     of a new user to the MovieWeb App"""
-    name = request.form.get("user_name")
-    try:
-        if data_manager.add_user(name):
-            message = f"User {name} added successfully!"
-        else:
-            message = f"User {name} already exist!"
-        render_template("add_user.html", message=message)
-    except Exception as e:
-        message = f"Error: {e}"
+    if request.method == "POST":
+        name = request.form.get("user_name")
+        try:
+            if data_manager.add_user(name):
+                message = f"User {name} added successfully!"
+            else:
+                message = f"User {name} already exist!"
+            render_template("add_user.html", message=message)
+        except Exception as e:
+            message = f"Error: {e}"
+            render_template("add_user.html", message=message)
+    return render_template("add_user.html")
 
-
-
-
+@app.route("/users/<int:user_id>/add_movie", methods=["GET", "POST"])
+def add_movie(user_id):
+    """ This route display a form to add a new movie to a 
+    users movies"""
+    if request.method == "POST":
+        try:
+            name = request.form.get("movie_name")
+            director = request.form.get("movie_director")
+            year = int(request.form.get("movie_year"))
+            rating = int(request.form.get("movie_rating"))
+            data_manager.add_movie(name, director, year, rating, user_id)
+            message = f"Movie {name} added successfully!"
+            render_template("add_movie.html", message=message)
+        except Exception as e:
+            message = f"Error: {e}"
+            render_template("add_movie.html", message=message)
+    render_template("add_movie.html")
 
 
 if __name__ == "__main__":
