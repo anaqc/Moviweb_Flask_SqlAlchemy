@@ -43,15 +43,21 @@ def user_movies(user_id):
 
 @app.route("/add_user",methods=["POST"])
 def add_user():
+    """ This route present a form that enables the addiotion
+    of a new user to the MovieWeb App"""
     name = request.form.get("user_name")
     try:
         if data_manager.add_user(name):
             message = f"User {name} added successfully!"
         else:
             message = f"User {name} already exist!"
-
+        render_template("add_user.html", message=message)
     except Exception as e:
         message = f"Error: {e}"
+
+
+
+
 
 
 if __name__ == "__main__":
