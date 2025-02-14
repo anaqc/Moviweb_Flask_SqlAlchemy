@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>Add movie - MovieWeb App</title>
+        <title>Update movie - MovieWeb App</title>
     </head>
     <body>
         <header>
@@ -12,18 +12,18 @@
                 <a href="/add_user"> Add user </a>
                 <a href="/add_movie"> Add movie </a>
             </nav>
-            <h1>Add movie</h1>
+            <h1>Update movie</h1>
         </header>
         <div class="form-container">
-            <form action="/add_movie" method="post">
+            <form action="{{ url_for('update_movie', user_id=user.id, movie_id=movie.id)}}" method="post">
                 <label for="movie_name"> movie name: </label>
-                <input type="text" name="movie_name" id="movie_name"><br><br>
+                <input type="text" value="{{movie.name}}" name="movie_name" id="movie_name"><br><br>
                 <label for="movie_director">Director:</label>
-                <input type="text" name="movie_director" id="movie_director" required><br><br>
+                <input type="text" value="{{movie.director}}" name="movie_director" id="movie_director" required><br><br>
                 <label for="movie_year">Year: </label>
-                <input type="text" name="movie_year" id="movie_year" placeholder="YYYY" pattern="\d{4}" maxlength="4" required><br><br>
+                <input type="text" value="{{movie.year}}" name="movie_year" id="movie_year" placeholder="YYYY" pattern="\d{4}" maxlength="4" required><br><br>
                 <label for="movie_rating">Rating: </label>
-                <input type="range" name="movie_rating" id="movie_rating" min="0" max="10" value="5" step="0.1" oninput="rangeValue.innerText = this.value">
+                <input type="range" value="{{movie.rating}}" name="movie_rating" id="movie_rating" min="0" max="10" value="5" step="0.1" oninput="rangeValue.innerText = this.value">
                 <p id="rangeValue">5</p>
                 <input type="submit" value="Add user">
             </form>
