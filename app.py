@@ -67,20 +67,21 @@ def add_user():
 def add_movie(user_id):
     """ This route display a form to add a new movie to a 
     users movies"""
-    
-    if request.method == "POST":
-        try:
-            name = request.form.get("movie_name")
-            director = request.form.get("movie_director")
-            year = int(request.form.get("movie_year"))
-            rating = int(request.form.get("movie_rating"))
-            data_manager.add_movie(name, director, year, rating, user_id)
-            message = f"Movie {name} added successfully!"
-            return render_template("add_movie.html", message=message, user_id=user_id)
-        except Exception as e:
-            message = f"Error: {e}"
-            return render_template("add_movie.html", message=message, user_id=user_id)
-    return render_template("add_movie.html", user_id=user_id)
+    try:
+        user = data_manager.get_user_info(user_id)
+        if user:
+            if request.method == "POST":
+            
+                name = request.form.get("movie_name")
+                director = request.form.get("movie_director")
+                year = int(request.form.get("movie_year"))
+                rating = int(request.form.get("movie_rating"))
+                data_manager.add_movie(name, director, year, rating, user_id)
+                message = f"Movie {name} added successfully!"
+                return render_template("add_movie.html", message=message, user_id=user_id)
+        return render_template("add_movie.html", user_id=user_id)
+    except NoResultFound:
+        return render_template("404.html")
 
 
 @app.route("/users/<int:update_user_id>/update_movie/<int:update_movie_id>", methods=["GET", "PUT"])
