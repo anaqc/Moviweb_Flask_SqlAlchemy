@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, redirect, url_for
 from datamanager.SQLite_data_manager import SQLiteDataManager
 from sqlalchemy.exc import SQLAlchemyError, NoResultFound
 
@@ -69,17 +69,17 @@ def add_movie(user_id):
     """ This route display a form to add a new movie to a 
     users movies"""
     try:
-        user = data_manager.get_user_info(user_id)
-        if user:
-            if request.method == "POST":
-                name = request.form.get("movie_name")
-                director = request.form.get("movie_director")
-                year = int(request.form.get("movie_year"))
-                rating = int(request.form.get("movie_rating"))
-                data_manager.add_movie(name, director, year, rating, user_id)
-                message = f"Movie {name} added successfully!"
-                return render_template("add_movie.html", message=message, user_id=user_id)
-        return render_template("add_movie.html", user_id=user_id)
+        if request.method == "POST":
+            name = request.form.get("movie_name")
+            director = request.form.get("movie_director")
+            year = int(request.form.get("movie_year"))
+            print(request.form.get("rating_display"))
+            print(request.form.get("movie_rating"))
+            rating = int(request.form.get("movie_rating"))
+            data_manager.add_movie(name, director, year, rating, user_id)
+            message = f"Movie {name} added successfully!"
+            return render_template("add_movie.html", message=message, user_id=user_id)
+        return render_template("add_movie.html", user_id=user_id, movie_rating="5")
     except NoResultFound:
         return render_template("404.html")
     except Exception:
@@ -110,9 +110,24 @@ def update_user_movie(update_user_id, update_movie_id):
         return render_template("update_movie.html", error=error)
 
 
+@app.route("/users/<int:user_id>/delete_movie/<int:movie_id>", methods=["GET", "POST"])
+def delete_movie(user_id, movie_id):
+    try:
+        if data_manager.delete_movie(movie_id, user_id):
+            return redirect(url_for("user_movies", user_id=user_id))
+        return "User or Movie not found!"
+    except Exception:
+        return render_template("404.html")
+
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template("404.html"), 404
+
+
+@app.errorhandler(500)
+def internal_server_error(e):
+    return render_template("500.html"), 500
 
 
 if __name__ == "__main__":

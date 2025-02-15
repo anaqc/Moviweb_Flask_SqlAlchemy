@@ -15,13 +15,12 @@
         </header>
         {% if message %}
         <p>{{message}}</p>
-        {% else %}
+        {% endif %}
         <h1>User {{user.name}} movies</h1>
         <ul>
             {% for movie in list_movies_user%}
             <li>User id: {{ movie.id }}, User name: {{movie.name}} </li>
             {% endfor %}
         </ul>
-        {% endif %}
     </body>
 </html>

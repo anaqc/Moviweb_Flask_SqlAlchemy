@@ -23,7 +23,7 @@
                 <label for="movie_year">Year: </label>
                 <input type="text" name="movie_year" id="movie_year" placeholder="YYYY" pattern="\d{4}" maxlength="4" required><br><br>
                 <label for="movie_rating">Rating: </label>
-                <input type="range" name="movie_rating" id="movie_rating" min="0" max="10" value="5" step="0.1" oninput="rangeValue.innerText = this.value">
+                <input type="range" name="movie_rating" id="movie_rating" min="0" max="10" oninput="rangeValue.innerText = this.value">
                 <p id="rangeValue">5</p>
                 <input type="submit" value="Add movie">
                 {% if message %}

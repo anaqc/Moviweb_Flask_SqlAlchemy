@@ -108,10 +108,13 @@ class SQLiteDataManager(DataMangerInterface):
         raise ValueError(f"movie id: {movie_id} or user id: {user_id} not exist!")
 
 
-    def delete_movie(self, movie_id):
+    def delete_movie(self, movie_id, user_id):
         """ This function delete a specific movie from a 
         the database"""
-        movie = self.session.query(Movie).get(movie_id)
+        movie = self.session.query(Movie).filter(
+            Movie.id == movie_id,
+            Movie.id_user == user_id
+        ).first()
         if movie:
             self.session.delete(movie)
             self.session.commit()
