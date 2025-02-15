@@ -63,6 +63,7 @@ def add_user():
             return render_template("add_user.html", message=message)
     return render_template("add_user.html")
 
+
 @app.route("/users/<int:user_id>/add_movie", methods=["GET", "POST"])
 def add_movie(user_id):
     """ This route display a form to add a new movie to a 

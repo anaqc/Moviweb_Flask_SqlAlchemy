@@ -18,6 +18,9 @@
                 <label for="user_name"> User name: </label>
                 <input type="text" name="user_name" id="user_name" required><br><br>
                 <input type="submit" value="Add user">
+                {% if message %}
+                <p>{{message}}</p>
+                {% endif %}
             </form>
         </div>
     </body>
