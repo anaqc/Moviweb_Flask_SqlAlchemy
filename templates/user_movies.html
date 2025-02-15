@@ -11,12 +11,17 @@
             <nav>
                 <a href="/add_user"> Add user</a>
             </nav>
-            <h1>Users {{user.name}} movies</h1>
+            
         </header>
+        {% if message %}
+        <p>{{message}}</p>
+        {% else %}
+        <h1>User {{user.name}} movies</h1>
         <ul>
             {% for movie in list_movies_user%}
             <li>User id: {{ movie.id }}, User name: {{movie.name}} </li>
             {% endfor %}
         </ul>
+        {% endif %}
     </body>
 </html>

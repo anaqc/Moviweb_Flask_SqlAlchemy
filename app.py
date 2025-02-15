@@ -1,5 +1,6 @@
 from flask import Flask, request, render_template
 from datamanager.SQLite_data_manager import SQLiteDataManager
+from sqlalchemy.exc import SQLAlchemyError, NoResultFound
 
 
 app = Flask(__name__)
@@ -38,10 +39,11 @@ def list_users():
 def user_movies(user_id):
     """ This route present a list of specific user favorite movies"""
     try: 
+        user = data_manager.get_user_info(user_id)
         list_movies_user = data_manager.get_user_movies(user_id)
-        return render_template("user_movies.html", list_movies_user=list_movies_user)
-    except ValueError as e:
-        return render_template("user_movies.html", message=e)
+        return render_template("user_movies.html", list_movies_user=list_movies_user, user=user)
+    except NoResultFound:
+        return render_template("404.html")
 
 
 @app.route("/add_user",methods=["GET","POST"])
