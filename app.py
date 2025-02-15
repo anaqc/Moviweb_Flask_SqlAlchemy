@@ -1,6 +1,6 @@
 from flask import Flask, request, render_template, redirect, url_for
 from datamanager.SQLite_data_manager import SQLiteDataManager
-from sqlalchemy.exc import SQLAlchemyError, NoResultFound
+from sqlalchemy.exc import NoResultFound
 
 
 app = Flask(__name__)
@@ -9,8 +9,6 @@ data_manager = SQLiteDataManager("moviwebapp.sqlite")
 
 # data_manager.add_user("elisa")
 # data_manager.add_movie("twilight", "Catherine Hardwicke", 2008, 10, 1)
-
-
 # new_data_manager.add_movie("f", " Hake", 2008, 10, 1)
 # users = new_data_manager.get_all_users()
 # for user in users:
@@ -73,9 +71,7 @@ def add_movie(user_id):
             name = request.form.get("movie_name")
             director = request.form.get("movie_director")
             year = int(request.form.get("movie_year"))
-            print(request.form.get("rating_display"))
-            print(request.form.get("movie_rating"))
-            rating = int(request.form.get("movie_rating"))
+            rating = float(request.form.get("movie_rating"))
             data_manager.add_movie(name, director, year, rating, user_id)
             message = f"Movie {name} added successfully!"
             return render_template("add_movie.html", message=message, user_id=user_id)

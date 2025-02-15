@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, Float
 from sqlalchemy.orm import declarative_base
 import datetime
 from models.base import Base
@@ -11,7 +11,7 @@ class Movie(Base):
     name = Column(String(150))
     director = Column(String(100))
     year = Column(Integer)
-    rating = Column(Integer)
+    rating = Column(Float)
     id_user = Column(Integer, ForeignKey("users.id"), nullable=True)
 
 
