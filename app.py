@@ -86,7 +86,7 @@ def update_user_movie(update_user_id, update_movie_id):
     """ this route display a form allowing for the updating of 
     details of a specific movie in a user list"""
     try:    
-        movie_user = data_manager.get_user_movie(update_user_id, update_movie_id)‚
+        movie_user = data_manager.get_user_movie(update_user_id, update_movie_id)
         if request.method == "PUT":
             movie = data_manager.update_movie(
                 user_id = update_user_id,
@@ -103,6 +103,11 @@ def update_user_movie(update_user_id, update_movie_id):
                             update_movie_id=update_movie_id, movie_user=movie_user)
     except ValueError as error:
         return render_template("update_movie.html", error=error)
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template("404.html"), 404
 
 
 if __name__ == "__main__":
