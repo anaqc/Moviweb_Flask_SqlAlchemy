@@ -29,13 +29,12 @@ class SQLiteDataManager(DataMangerInterface):
 
     def get_user_movies(self, search_id_user: int):
         """ This function a list of all movies of a specific user"""
-        try:
-            # Check if user exist    
-            user  = self.session.query(User).filter(User.id == search_id_user).one()
+        # Check if user exist    
+        user  = self.session.query(User).filter(User.id == search_id_user).one()
+        if user:
             user_movies = self.session.query(Movie).filter(Movie.id_user == search_id_user).all()
             return user_movies
-        except NoResultFound:   
-            return None 
+        raise ValueError(f"User {user.id} not exist")
         
     
     def add_user(self, user_name: str):
@@ -71,6 +70,17 @@ class SQLiteDataManager(DataMangerInterface):
         except Exception as e:
             self.session.rollback()
             raise Exception(f"Unexpected error adding the movie: {str(e)}")
+
+
+    def get_user_movie(self, user_id, movie_id):
+        """ This function return the details of a specific movie in the database"""
+        query = self.session.query(User, Movie).join(Movie).filter(
+            User.id ==user_id,
+            Movie.id == movie_id
+        ).first()
+        if query:
+            return query[1]
+        raise ValueError(f"movie id: {movie_id} or user id: {user_id} not exist!")
 
 
     def update_movie(self,user_id, movie_id: int, movie_name: str = None, movie_director: str = None,

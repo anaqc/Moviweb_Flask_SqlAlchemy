@@ -26,7 +26,7 @@ def home():
     return "Welcome to MovieWeb App!"
 
 
-@app.route("/users")
+@app.route("/users", methods=["GET"])
 def list_users():
     """ This flask route list all users registered in 
     the MovieWeb App"""
@@ -34,12 +34,15 @@ def list_users():
     return render_template("users.html", users=users)
 
 
-@app.route("/users/<int:user_id>")
+@app.route("/users/<int:user_id>", methods=["GET"])
 def user_movies(user_id):
     """ This route present a list of specific user favorite movies"""
-    list_movies_user = data_manager.get_user_movies(user_id)
-    return list_movies_user
-    
+    try: 
+        list_movies_user = data_manager.get_user_movies(user_id)
+        return render_template("user_movies.html", list_movies_user=list_movies_user)
+    except ValueError as e:
+        return render_template("user_movies.html", message=e)
+
 
 @app.route("/add_user",methods=["GET","POST"])
 def add_user():
@@ -52,16 +55,17 @@ def add_user():
                 message = f"User {name} added successfully!"
             else:
                 message = f"User {name} already exist!"
-            render_template("add_user.html", message=message)
+            return render_template("add_user.html", message=message)
         except Exception as e:
             message = f"Error: {e}"
-            render_template("add_user.html", message=message)
+            return render_template("add_user.html", message=message)
     return render_template("add_user.html")
 
 @app.route("/users/<int:user_id>/add_movie", methods=["GET", "POST"])
 def add_movie(user_id):
     """ This route display a form to add a new movie to a 
     users movies"""
+    
     if request.method == "POST":
         try:
             name = request.form.get("movie_name")
@@ -70,19 +74,20 @@ def add_movie(user_id):
             rating = int(request.form.get("movie_rating"))
             data_manager.add_movie(name, director, year, rating, user_id)
             message = f"Movie {name} added successfully!"
-            render_template("add_movie.html", message=message)
+            return render_template("add_movie.html", message=message, user_id=user_id)
         except Exception as e:
             message = f"Error: {e}"
-            render_template("add_movie.html", message=message)
-    render_template("add_movie.html")
+            return render_template("add_movie.html", message=message, user_id=user_id)
+    return render_template("add_movie.html", user_id=user_id)
 
 
-@app.route("/users/<int: user_id>/update_movie/<int: movie_id>", methods=["GET", "PUT"])
+@app.route("/users/<int:update_user_id>/update_movie/<int:update_movie_id>", methods=["GET", "PUT"])
 def update_user_movie(update_user_id, update_movie_id):
     """ this route display a form allowing for the updating of 
     details of a specific movie in a user list"""
-    if request.method == "PUT":
-        try: 
+    try:    
+        movie_user = data_manager.get_user_movie(update_user_id, update_movie_id)‚
+        if request.method == "PUT":
             movie = data_manager.update_movie(
                 user_id = update_user_id,
                 movie_id = update_movie_id,
@@ -93,9 +98,11 @@ def update_user_movie(update_user_id, update_movie_id):
             )
             if movie:
                 message = f"Movie {movie.name} updated successfully!"
-                render_template("update_movie.html", message=message)
-        except ValueError as e: 
-            render_template("update_movie.html", message=e)
+                return render_template("update_movie.html", message=message, movie=movie)
+        return render_template("update_movie.html", update_user_id=update_user_id, 
+                            update_movie_id=update_movie_id, movie_user=movie_user)
+    except ValueError as error:
+        return render_template("update_movie.html", error=error)
 
 
 if __name__ == "__main__":
