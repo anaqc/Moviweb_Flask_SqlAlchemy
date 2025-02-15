@@ -72,7 +72,9 @@ def add_movie(user_id):
             director = request.form.get("movie_director")
             year = int(request.form.get("movie_year"))
             rating = float(request.form.get("movie_rating"))
-            data_manager.add_movie(name, director, year, rating, user_id)
+            poster = request.form.get("movie_poster")
+            imdb_id = request.form.get("movie_imdb_id")
+            data_manager.add_movie(name, director, year, rating, poster, imdb_id, user_id)
             message = f"Movie {name} added successfully!"
             return render_template("add_movie.html", message=message, user_id=user_id)
         return render_template("add_movie.html", user_id=user_id, movie_rating="5")
@@ -95,7 +97,9 @@ def update_user_movie(update_user_id, update_movie_id):
                 movie_name = request.form.get("movie_name"),
                 movie_director = request.form.get("movie_director"),
                 movie_year = int(request.form.get("movie_year")),
-                movie_rating = int(request.form.get("movie_rating"))
+                movie_rating = int(request.form.get("movie_rating")),
+                movie_poster = request.form.get("movie_poster"),
+                movie_imdb_id = request.form.get("movie_imdb_id")
             )
             if movie:
                 return redirect(url_for("user_movies", user_id=update_user_id))

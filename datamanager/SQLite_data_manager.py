@@ -57,7 +57,8 @@ class SQLiteDataManager(DataMangerInterface):
             raise Exception(f"Unexpected error while adding user: {str(e)}")
 
 
-    def add_movie(self, movie_name, movie_director, movie_year, movie_rating, movie_id_user):
+    def add_movie(self, movie_name, movie_director, movie_year, movie_rating,movie_poster, 
+                  movie_imdb_id, movie_id_user):
         """ This function add a new movie in the database"""
         try: 
             new_movie = Movie(
@@ -65,6 +66,8 @@ class SQLiteDataManager(DataMangerInterface):
                             director=movie_director,
                             year=movie_year,
                             rating=movie_rating,
+                            poster=movie_poster,
+                            imdb_id=movie_imdb_id,
                             id_user=movie_id_user 
                         )
             self.session.add(new_movie)
@@ -87,7 +90,8 @@ class SQLiteDataManager(DataMangerInterface):
 
 
     def update_movie(self,user_id, movie_id: int, movie_name: str = None, movie_director: str = None,
-                      movie_year: int = None, movie_rating: int = None):
+                      movie_year: int = None, movie_rating: int = None, movie_poster:str=None, 
+                      movie_imdb_id:str=None):
         """ This function update the datails of a 
         specific movie in the database"""
         movie = self.session.query(Movie).filter(
@@ -103,6 +107,10 @@ class SQLiteDataManager(DataMangerInterface):
                 movie.year = movie_year
             if movie_rating:
                 movie.rating = movie_rating
+            if movie_poster:
+                movie.poster = movie_poster
+            if movie_imdb_id:
+                movie.imdb_id = movie_imdb_id    
             self.session.commit()
             return movie
         raise ValueError(f"movie id: {movie_id} or user id: {user_id} not exist!")

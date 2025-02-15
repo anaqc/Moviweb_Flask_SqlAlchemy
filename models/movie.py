@@ -12,15 +12,19 @@ class Movie(Base):
     director = Column(String(100))
     year = Column(Integer)
     rating = Column(Float)
+    poster = Column(String(200))
+    imdb_id = Column(String(15))
     id_user = Column(Integer, ForeignKey("users.id"), nullable=True)
 
 
-    def __init__(self, name, director, year, rating, id_user):
+    def __init__(self, name, director, year, rating, poster,imdb_id, id_user):
         self.name = name
         self.director = director
         self.year = year
         self.rating = rating
         self.id_user = id_user
+        self.poster = poster
+        self.imdb_id = imdb_id
         now_year = datetime.datetime.now().year
         if not 1000 <= self.year <= now_year:
             raise ValueError("invalid year")
