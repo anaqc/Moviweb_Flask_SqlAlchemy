@@ -77,5 +77,26 @@ def add_movie(user_id):
     render_template("add_movie.html")
 
 
+@app.route("/users/<int: user_id>/update_movie/<int: movie_id>", methods=["GET", "PUT"])
+def update_user_movie(update_user_id, update_movie_id):
+    """ this route display a form allowing for the updating of 
+    details of a specific movie in a user list"""
+    if request.method == "PUT":
+        try: 
+            movie = data_manager.update_movie(
+                user_id = update_user_id,
+                movie_id = update_movie_id,
+                movie_name = request.form.get("movie_name"),
+                movie_director = request.form.get("movie_director"),
+                movie_year = int(request.form.get("movie_year")),
+                movie_rating = int(request.form.get("movie_rating"))
+            )
+            if movie:
+                message = f"Movie {movie.name} updated successfully!"
+                render_template("update_movie.html", message=message)
+        except ValueError as e: 
+            render_template("update_movie.html", message=e)
+
+
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=5000, debug=True)
