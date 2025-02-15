@@ -72,7 +72,6 @@ def add_movie(user_id):
         user = data_manager.get_user_info(user_id)
         if user:
             if request.method == "POST":
-            
                 name = request.form.get("movie_name")
                 director = request.form.get("movie_director")
                 year = int(request.form.get("movie_year"))
@@ -82,6 +81,8 @@ def add_movie(user_id):
                 return render_template("add_movie.html", message=message, user_id=user_id)
         return render_template("add_movie.html", user_id=user_id)
     except NoResultFound:
+        return render_template("404.html")
+    except Exception:
         return render_template("404.html")
 
 

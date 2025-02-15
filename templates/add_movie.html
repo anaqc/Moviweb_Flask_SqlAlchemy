@@ -15,7 +15,7 @@
             <h1>Add movie</h1>
         </header>
         <div class="form-container">
-            <form action="/add_movie" method="post">
+            <form action="{{ url_for('add_movie', user_id=user_id)}}" method="post">
                 <label for="movie_name"> movie name: </label>
                 <input type="text" name="movie_name" id="movie_name"><br><br>
                 <label for="movie_director">Director:</label>
@@ -25,7 +25,10 @@
                 <label for="movie_rating">Rating: </label>
                 <input type="range" name="movie_rating" id="movie_rating" min="0" max="10" value="5" step="0.1" oninput="rangeValue.innerText = this.value">
                 <p id="rangeValue">5</p>
-                <input type="submit" value="Add user">
+                <input type="submit" value="Add movie">
+                {% if message %}
+                <p>{{message}}</p>
+                {% endif %}
             </form>
         </div>
     </body>
