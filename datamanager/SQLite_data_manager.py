@@ -90,8 +90,8 @@ class SQLiteDataManager(DataMangerInterface):
                       movie_year: int = None, movie_rating: int = None):
         """ This function update the datails of a 
         specific movie in the database"""
-        movie = self.session.query(User, Movie).join(Movie).filter(
-            User.id == user_id, 
+        movie = self.session.query(Movie).filter(
+            Movie.id_user == user_id, 
             Movie.id == movie_id
             ).first()
         if movie:
