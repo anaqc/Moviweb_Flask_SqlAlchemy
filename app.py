@@ -102,10 +102,8 @@ def update_user_movie(update_user_id, update_movie_id):
                 movie_rating = int(request.form.get("movie_rating"))
             )
             if movie:
-                message = f"Movie {movie.name} updated successfully!"
-                return render_template("update_movie.html", message=message, movie=movie, movie_user=movie_user)
-        return render_template("update_movie.html", update_user_id=update_user_id, 
-                            update_movie_id=update_movie_id, movie_user=movie_user)
+                return redirect(url_for("user_movies", user_id=update_user_id))
+        return render_template("update_movie.html", movie_user=movie_user)
     except ValueError as error:
         return render_template("update_movie.html", error=error)
 

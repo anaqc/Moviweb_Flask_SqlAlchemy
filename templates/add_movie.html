@@ -15,6 +15,7 @@
             <h1>Add movie</h1>
         </header>
         <div class="form-container">
+
             <form action="{{ url_for('add_movie', user_id=user_id)}}" method="post">
                 <label for="movie_name"> movie name: </label>
                 <input type="text" name="movie_name" id="movie_name"><br><br>

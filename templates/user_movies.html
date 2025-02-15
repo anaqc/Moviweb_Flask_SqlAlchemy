@@ -17,10 +17,41 @@
         <p>{{message}}</p>
         {% endif %}
         <h1>User {{user.name}} movies</h1>
+        <div class="table-container">
+            <table>
+                <tr>
+                    <th> Id movie </th>
+                    <th> Movie name </th>
+                    <th> Director </th>
+                    <th> Year </th>
+                    <th> Rating </th>
+                    <th> Update </th>
+                    <th> Delete </th>
+                </tr>
+                {% for movie in list_movies_user%}
+                <tr>
+                    <td>{{movie.id}}</td>
+                    <td>{{movie.name}}</td>
+                    <td>{{movie.director}}</td>
+                    <td>{{movie.year}}</td>
+                    <td>{{movie.rating}}</td>
+                    <td>
+                        <form action="{{ url_for('update_user_movie', update_user_id=movie.id_user, update_movie_id=movie.id)}}" method="POST">
+                            <input type="submit" value="Update">
+                        </form> 
+                    </td>
+                    <td>
+                        <form action="{{ url_for('delete_movie', user_id=movie.id_user, movie_id=movie.id)}}" method="POST">
+                            <input type="submit" value="Delete">
+                        </form> 
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>        
+        </div>
+        
         <ul>
-            {% for movie in list_movies_user%}
-            <li>User id: {{ movie.id }}, User name: {{movie.name}} </li>
-            {% endfor %}
+            
         </ul>
     </body>
 </html>
