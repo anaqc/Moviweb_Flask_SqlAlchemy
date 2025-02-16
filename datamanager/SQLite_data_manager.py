@@ -127,7 +127,7 @@ class SQLiteDataManager(DataMangerInterface):
             self.session.delete(movie)
             self.session.commit()
             return True
-        return False
+        raise ValueError(f"movie id: {movie_id} or user id: {user_id} not exist!")
     
 
     def delete_usser(self, user_id):
@@ -138,5 +138,5 @@ class SQLiteDataManager(DataMangerInterface):
             self.session.delete(user)
             self.session.commit()
             return True
-        return False
+        raise ValueError(f"User id: {user_id} not exist!")
 

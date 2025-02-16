@@ -30,8 +30,15 @@ def home():
 def list_users():
     """ This flask route list all users registered in 
     the MovieWeb App"""
-    users = data_manager.get_all_users()
-    return render_template("users.html", users=users)
+    try: 
+        users = data_manager.get_all_users()
+        return render_template("users.html", users=users)
+    except IOError as e:
+        # Code to handle the exception
+        print("An IOError occurred: ", str(e))
+        return render_template("404.html", error=str(e))
+    except Exception as e:
+        return render_template("404.html", error=str(e))
 
 
 @app.route("/users/<int:user_id>", methods=["GET"])
@@ -43,24 +50,33 @@ def user_movies(user_id):
         return render_template("user_movies.html", list_movies_user=list_movies_user, user=user)
     except NoResultFound:
         return render_template("404.html")
+    except IOError as e:
+        # Code to handle the exception
+        print("An IOError occurred: ", str(e))
+        return render_template("404.html", error=str(e))
+    except Exception as e:
+        return render_template("404.html", error=str(e))
 
 
 @app.route("/add_user",methods=["GET","POST"])
 def add_user():
     """ This route present a form that enables the addiotion
     of a new user to the MovieWeb App"""
-    if request.method == "POST":
-        name = request.form.get("user_name")
-        try:
+    try:
+        if request.method == "POST":
+            name = request.form.get("user_name")
             if data_manager.add_user(name):
                 message = f"User {name} added successfully!"
             else:
                 message = f"User {name} already exist!"
             return render_template("add_user.html", message=message)
-        except Exception as e:
-            message = f"Error: {e}"
-            return render_template("add_user.html", message=message) 
-    return render_template("add_user.html")
+        return render_template("add_user.html")
+    except IOError as e:
+        # Code to handle the exception
+        print("An IOError occurred: ", str(e))
+        return render_template("404.html", error=str(e))
+    except Exception as e:
+        return render_template("404.html", error=str(e))
 
 
 @app.route("/users/<int:user_id>/add_movie", methods=["GET", "POST"])
@@ -79,18 +95,18 @@ def add_movie(user_id):
             data_manager.add_movie(user_id, name, director, year, rating, poster, imdb_id)
             message = f"Movie {name} added successfully!"
             movie_name_search = ""
-            return render_template("add_movie.html", message=message, user_id=user_id)
+            return redirect(url_for("user_movies",user_id=user_id))
+            #return render_template("user_movies.html", message=message, user_id=user_id)
         if movie_name_search:
             list_movies = OMDb_api.request_movie(movie_name_search)
             print(type(list_movies))
+            
             return render_template("add_movie.html", user_id=user_id, list_movies=list_movies, movie_name_search=movie_name_search)
         return render_template("add_movie.html", user_id=user_id, movie_rating="5", movie_name_search=movie_name_search)
     except NoResultFound as e:
-        print(e)
-        return render_template("404.html")
+        return render_template("404.html", error=str(e))
     except Exception as e:
-        print(e)
-        return render_template("404.html")
+        return render_template("404.html", error=str(e))
 
 
 @app.route("/users/<int:update_user_id>/update_movie/<int:update_movie_id>", methods=["GET","POST", "PUT"])
@@ -113,8 +129,14 @@ def update_user_movie(update_user_id, update_movie_id):
             if movie:
                 return redirect(url_for("user_movies", user_id=update_user_id))
         return render_template("update_movie.html", movie_user=movie_user)
-    except ValueError as error:
-        return render_template("update_movie.html", error=error)
+    except ValueError as e:
+        return render_template("404.html", error=str(e))
+    except IOError as e:
+        # Code to handle the exception
+        print("An IOError occurred: ", str(e))
+        return render_template("404.html", error=str(e))
+    except Exception as e:
+        return render_template("404.html", error=str(e))
 
 
 @app.route("/users/<int:user_id>/delete_movie/<int:movie_id>", methods=["GET", "POST"])
@@ -122,14 +144,13 @@ def delete_movie(user_id, movie_id):
     try:
         if data_manager.delete_movie(movie_id, user_id):
             return redirect(url_for("user_movies", user_id=user_id))
-        return "User or Movie not found!"
-    except Exception:
-        return render_template("404.html")
+    except Exception as e:
+        return render_template("404.html", error=str(e))
 
 
 @app.errorhandler(404)
 def page_not_found(e):
-    return render_template("404.html"), 404
+    return render_template("404.html", error=str(e)), 404
 
 
 @app.errorhandler(500)
