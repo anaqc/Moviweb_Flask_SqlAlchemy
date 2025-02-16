@@ -1,17 +1,25 @@
 body {
-    background: #F5F5F0;
-    color: black;
-    font-family: "Delius", serif;
-  } 
+  font-family: "Delius", serif;
+}
+.custom-wrapper,
+.custom-form {
+  background-color: black; /* Dark Gray */
+  color: #e09f3e; /* Gold */
+}
+.navbar {
+  background: #001d3d;
+  background-color: #e09f3e;
+}
+.btn-primary{
+  background-color: #e09f3e;
+  color: #001d3d;
+  border-color: #e09f3e;
+}
+.btn-primary:hover {
+  background-color: #fcbf49;
+  border-color: #fcbf49;
+}
 
-  .list-movies-title {
-    padding: 10px 0;
-    background: PaleVioletRed;
-    color: white;
-    text-align: center;
-    font-size: 16pt;
-  }
-  
   .movie-grid {
     list-style-type: none;
     padding: 0;
@@ -29,6 +37,15 @@ body {
   .movie {
     width: 140px;
   }
+
+  .buttons-group {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .movie-update,
+  .movie-delete {
+    margin-inline: 5px;
+  }
   
   .movie-title,
   .movie-year,
@@ -36,14 +53,6 @@ body {
     font-size: 0.8em;
     text-align: center;
   }
-  .checked {
-    color: orange;
-  }
-  
-  .movie-title {
-    margin-top: 10px;
-  }
-  
   .movie-year {
     color: #999;
   }
@@ -52,16 +61,6 @@ body {
       box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
       width: 128px;
       height: 193px;
-  }
-  
-  .movie-note {
-      opacity: 0;
-      position: absolute;
-      top: 30%;
-      background-color: PaleVioletRed;
-      color: white;
-      font-size: 0.7em;
-      padding:5px 5px;
   }
   
   .movie:hover .movie-note {
