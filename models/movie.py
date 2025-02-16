@@ -17,7 +17,7 @@ class Movie(Base):
     id_user = Column(Integer, ForeignKey("users.id"), nullable=True)
 
 
-    def __init__(self, name, director, year, rating, poster,imdb_id, id_user):
+    def __init__(self, id_user, name, director=None, year=None, rating=None, poster=None,imdb_id=None ):
         self.name = name
         self.director = director
         self.year = year
@@ -26,9 +26,9 @@ class Movie(Base):
         self.poster = poster
         self.imdb_id = imdb_id
         now_year = datetime.datetime.now().year
-        if not 1000 <= self.year <= now_year:
+        if self.year and not 0 <= self.year <= now_year:
             raise ValueError("invalid year")
-        if not 0 <= self.rating <= 10:
+        if self.rating and not 0 <= self.rating <= 10:
             raise ValueError("invalid rating range")
         
     

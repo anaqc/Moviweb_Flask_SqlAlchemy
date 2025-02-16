@@ -16,8 +16,13 @@
             <h1>Add movie</h1>
         </header>
         <div class="form-container">
-
-            <form action="{{ url_for('add_movie', user_id=user_id)}}" method="post">
+            <form action="{{ url_for('add_movie', user_id=user_id)}}" method="GET">
+                <label for="movie_name_search"> search movie in Omdb API: </label>
+                <input type="text" name="movie_name_search" id="movie_name_search">
+                <input type="submit" value="Search movie">
+            </form><br><br>
+            {% if movie_name_search == "" %}
+            <form action="{{ url_for('add_movie', user_id=user_id)}}" method="POST">
                 <label for="movie_name"> movie name: </label>
                 <input type="text" name="movie_name" id="movie_name"><br><br>
                 <label for="movie_director">Director:</label>
@@ -26,16 +31,43 @@
                 <input type="text" name="movie_year" id="movie_year" placeholder="YYYY" pattern="\d{4}" maxlength="4" required><br><br>
                 <label for="movie_rating">Rating: </label>
                 <input type="range" name="movie_rating" id="movie_rating" min="0" max="10" step="0.1" oninput="rangeValue.innerText = this.value">
-                <p id="rangeValue">5</p><br><br>
+                <p id="rangeValue">5</p>
                 <label for="movie_poster">Poster: </label>
                 <input type="text" name="movie_poster" id="movie_poster"><br><br>
                 <label for="movie_imdb_id">imdb ID: </label>
-                <input type="text" name="movie_imdb_id" id="movie_imdb_id">
+                <input type="text" name="movie_imdb_id" id="movie_imdb_id"><br><br>
                 <input type="submit" value="Add movie">
                 {% if message %}
                 <p>{{message}}</p>
                 {% endif %}
             </form>
+            {% else %}
+            <ol class="movie-grid">
+                {% for movie in list_movies %}
+                <li>
+                    <div class="movie-container">
+                        <div class="movie">
+                            <form action="{{url_for('add_movie', user_id=user_id)}}" method="POST">
+                            <a href="https://www.imdb.com/de/title/{{movie.get('imdbID')}}">
+                                <img class="movie-poster" src="{{movie.get('Poster')}}" alt="">
+                            </a>
+                            <div class="movie-title">{{movie.get('Title')}}</div>
+                            <div class="movie-year">{{movie.get('Year')}}</div>
+                            <div class="movie-rating">{{movie.get('imdbRating')}}</div>
+                            <input type="hidden" name="movie_name" value="{{movie.get('Title')}}" >
+                            <input type="hidden" name="movie_year" value="{{movie.get('Year')}}" >
+                            <input type="hidden" name="movie_director" value="{{movie.get('Director')}}" >
+                            <input type="hidden" name="movie_rating" value="{{movie.get('imdbRating')}}" >
+                            <input type="hidden" name="movie_poster" value="{{movie.get('Poster')}}" >
+                            <input type="hidden" name="movie_imdb_id" value="{{movie.get('imdbID')}}" >
+                            <div class="movie-add"><input type="submit" value="Add movie"></div>
+                            </form> 
+                        </div>    
+                    </div>               
+                </li>
+                {% endfor %} 
+            </ol>
+            {% endif %}
         </div>
     </body>
 </html>

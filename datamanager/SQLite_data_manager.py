@@ -57,8 +57,8 @@ class SQLiteDataManager(DataMangerInterface):
             raise Exception(f"Unexpected error while adding user: {str(e)}")
 
 
-    def add_movie(self, movie_name, movie_director, movie_year, movie_rating,movie_poster, 
-                  movie_imdb_id, movie_id_user):
+    def add_movie(self,movie_id_user, movie_name, movie_director, movie_year, movie_rating,movie_poster, 
+                  movie_imdb_id ):
         """ This function add a new movie in the database"""
         try: 
             new_movie = Movie(

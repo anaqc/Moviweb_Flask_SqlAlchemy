@@ -1,6 +1,7 @@
 from flask import Flask, request, render_template, redirect, url_for
 from datamanager.SQLite_data_manager import SQLiteDataManager
 from sqlalchemy.exc import NoResultFound
+from datamanager.data_OMDb_API import OMDb_api
 
 
 app = Flask(__name__)
@@ -58,7 +59,7 @@ def add_user():
             return render_template("add_user.html", message=message)
         except Exception as e:
             message = f"Error: {e}"
-            return render_template("add_user.html", message=message)
+            return render_template("add_user.html", message=message) 
     return render_template("add_user.html")
 
 
@@ -67,20 +68,28 @@ def add_movie(user_id):
     """ This route display a form to add a new movie to a 
     users movies"""
     try:
+        movie_name_search = request.args.get("movie_name_search", "")
         if request.method == "POST":
             name = request.form.get("movie_name")
             director = request.form.get("movie_director")
-            year = int(request.form.get("movie_year"))
-            rating = float(request.form.get("movie_rating"))
+            year = int(request.form.get("movie_year")) if request.form.get("movie_year") != "None" else 0
+            rating = float(request.form.get("movie_rating")) if request.form.get("movie_rating") != "None" else 0
             poster = request.form.get("movie_poster")
             imdb_id = request.form.get("movie_imdb_id")
-            data_manager.add_movie(name, director, year, rating, poster, imdb_id, user_id)
+            data_manager.add_movie(user_id, name, director, year, rating, poster, imdb_id)
             message = f"Movie {name} added successfully!"
+            movie_name_search = ""
             return render_template("add_movie.html", message=message, user_id=user_id)
-        return render_template("add_movie.html", user_id=user_id, movie_rating="5")
-    except NoResultFound:
+        if movie_name_search:
+            list_movies = OMDb_api.request_movie(movie_name_search)
+            print(type(list_movies))
+            return render_template("add_movie.html", user_id=user_id, list_movies=list_movies, movie_name_search=movie_name_search)
+        return render_template("add_movie.html", user_id=user_id, movie_rating="5", movie_name_search=movie_name_search)
+    except NoResultFound as e:
+        print(e)
         return render_template("404.html")
-    except Exception:
+    except Exception as e:
+        print(e)
         return render_template("404.html")
 
 
