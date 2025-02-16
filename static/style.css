@@ -1,18 +1,21 @@
 body {
   font-family: "Delius", serif;
+  background-color: black;
+  color: #e09f3e; /* Gold */
 }
 .custom-wrapper,
-.custom-form {
+.custom-form,
+.container * {
   background-color: black; /* Dark Gray */
   color: #e09f3e; /* Gold */
 }
 .navbar {
-  background: #001d3d;
+  background: black;
   background-color: #e09f3e;
 }
 .btn-primary{
   background-color: #e09f3e;
-  color: #001d3d;
+  color: black;
   border-color: #e09f3e;
 }
 .btn-primary:hover {

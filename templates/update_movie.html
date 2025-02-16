@@ -3,40 +3,95 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://fonts.googleapis.com/css2?family=Delius&display=swap" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <link rel="stylesheet" href="/static/style.css"/>
         <title>Update movie - MovieWeb App</title>
     </head>
-    <body>
-        <header>
-            <nav>
-                <a href="/add_user"> Add user </a>
-                <a href="/add_movie"> Add movie </a>
-            </nav>
-            <h1>Update movie</h1>
-        </header>
+    <body class="min-vh-100">
+        <nav class="navbar navbar-expand" aria-label="Second navbar example">
+            <div class="container-fluid">
+              <a class="navbar-brand">MowiWeb</a>
+              <div class="collapse navbar-collapse" id="navbarsExample02">
+                <div class="navbar-nav me-auto">
+                <div class="nav-item">
+                        <a class="nav-link" href="{{url_for('user_movies', user_id=movie_user.id_user)}}">Movies</a>
+                    </div>
+                  <div class="nav-item">
+                    <a class="nav-link" href="{{url_for('add_movie', user_id=movie_user.id_user)}}">Add movie</a>
+                  </div>
+                </div>
+                <form role="search">
+                  <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+                </form>
+              </div>
+            </div>
+          </nav>
         {% if error %}
         <p>{{error}}</p>
         {% else %}
-        <div class="form-container">
-            <form action="{{ url_for('update_user_movie', update_user_id=movie_user.id_user, update_movie_id=movie_user.id)}}" method="POST">
-                <!-- This tells Flask to treat it as a PUT request -->
-                <input type="hidden" name="_method" value="PUT">  
-                <label for="movie_name"> movie name: </label>
-                <input type="text" value="{{movie_user.name}}" name="movie_name" id="movie_name" required><br><br>
-                <label for="movie_director">Director:</label>
-                <input type="text" value="{{movie_user.director}}" name="movie_director" id="movie_director"><br><br>
-                <label for="movie_year">Year: </label>
-                <input type="text" value="{{movie_user.year}}" name="movie_year" id="movie_year" placeholder="YYYY" pattern="\d{4}" maxlength="4"><br><br>
-                <label for="movie_rating">Rating: </label>
-                <input type="range" value="{{movie_user.rating}}" name="movie_rating" id="movie_rating" min="0" max="10" step="0.1" oninput="rangeValue.innerText = this.value">
-                <p id="rangeValue">{{movie_user.rating}}</p>
-                <label for="movie_poster">Poster: </label>
-                <input type="text" name="movie_poster" id="movie_poster" value="{{movie_user.poster}}"><br><br>
-                <label for="movie_imdb_id">imdb ID: </label>
-                <input type="text" name="movie_imdb_id" id="movie_imdb_id" value="{{movie_user.imdb_id}}">
-                <input type="submit" value="Update Movie">
-            </form>
+        <div class="container mt-5">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="text-center mb-0">Update movie</h5>
+                        </div> 
+                        <div class="card-body ">
+                            <div class="form-container">
+                                <form action="{{ url_for('update_user_movie', update_user_id=movie_user.id_user, update_movie_id=movie_user.id)}}" method="POST">
+                                    <!-- This tells Flask to treat it as a PUT request -->
+                                    
+                                    <input type="hidden" name="_method" value="PUT">  
+                                    <div class="row mb-3">
+                                        
+                                            <label class="form-label for="movie_name"> movie name: </label>
+                                            <input class="form-control" type="text" value="{{movie_user.name}}" name="movie_name" id="movie_name" required>
+                                        
+                                    </div>
+                                    <div class="row mb-3">
+                                    
+                                            <label class="form-label" for="movie_director">Director:</label>
+                                            <input class="form-control" type="text" value="{{movie_user.director}}" name="movie_director" id="movie_director">
+                                        
+                                    </div>
+                                    <div class="row mb-3">
+                              
+                                            <label for="movie_year">Year: </label>
+                                            <input class="form-control" type="text" value="{{movie_user.year}}" name="movie_year" id="movie_year" placeholder="YYYY" pattern="\d{4}" maxlength="4">
+                           
+                                    </div>
+                                    <div class="row mb-3">    
+                                        <div class="col-md-6">     
+                                            <label for="movie_rating">Rating: </label>
+                                            <input type="range" value="{{movie_user.rating}}" name="movie_rating" id="movie_rating" min="0" max="10" step="0.1" oninput="rangeValue.innerText = this.value">
+                                            <p id="rangeValue">{{movie_user.rating}}</p>
+                                        </div>        
+                                    </div>
+                                    <div class="row mb-3">
+                                     
+                                            <label for="movie_poster">Poster: </label>
+                                            <input class="form-control" type="text" name="movie_poster" id="movie_poster" value="{{movie_user.poster}}">
+                     
+                                    </div>
+                                    <div class="row mb-3">    
+                                     
+                                            <label for="movie_imdb_id">imdb ID: </label>
+                                            <input class="form-control" type="text" name="movie_imdb_id" id="movie_imdb_id" value="{{movie_user.imdb_id}}">
+                                    
+                                    </div> 
+                                    <div class="d-grid">  
+                                            <input class="btn btn-primary w-50" type="submit" value="Update Movie">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
         </div>
         {% endif %}
     </body>
