@@ -31,7 +31,7 @@ def list_users():
     """ This flask route list all users registered in 
     the MovieWeb App"""
     try: 
-        users = data_manager.get_all_users()
+        users = data_manager._get_all_users()
         return render_template("users.html", users=users)
     except IOError as e:
         # Code to handle the exception
@@ -45,8 +45,8 @@ def list_users():
 def user_movies(user_id):
     """ This route present a list of specific user favorite movies"""
     try: 
-        user = data_manager.get_user_info(user_id)
-        list_movies_user = data_manager.get_user_movies(user_id)
+        user = data_manager._get_user_info(user_id)
+        list_movies_user = data_manager._get_user_movies(user_id)
         return render_template("user_movies.html", list_movies_user=list_movies_user, user=user)
     except NoResultFound:
         return render_template("404.html")
@@ -65,7 +65,7 @@ def add_user():
     try:
         if request.method == "POST":
             name = request.form.get("user_name")
-            if data_manager.add_user(name):
+            if data_manager._add_user(name):
                 message = f"User {name} added successfully!"
             else:
                 message = f"User {name} already exist!"
@@ -88,41 +88,43 @@ def add_movie(user_id):
         if request.method == "POST":
             name = request.form.get("movie_name")
             director = request.form.get("movie_director")
-            year = int(request.form.get("movie_year")) if request.form.get("movie_year") != "None" else 0
-            rating = float(request.form.get("movie_rating")) if request.form.get("movie_rating") != "None" else 0
+            movie_year = request.form.get("movie_year")
+            year = int(movie_year) if movie_year != "None" else None
+            rating_movie = request.form.get("movie_rating")
+            rating = float(rating_movie) if rating_movie != "None" else 0
             poster = request.form.get("movie_poster")
             imdb_id = request.form.get("movie_imdb_id")
-            data_manager.add_movie(user_id, name, director, year, rating, poster, imdb_id)
-            message = f"Movie {name} added successfully!"
+            data_manager._add_movie(user_id, name, director, year, rating, poster, imdb_id)
             movie_name_search = ""
             return redirect(url_for("user_movies",user_id=user_id))
-            #return render_template("user_movies.html", message=message, user_id=user_id)
         if movie_name_search:
             list_movies = OMDb_api.request_movie(movie_name_search)
             print(type(list_movies))
-            
-            return render_template("add_movie.html", user_id=user_id, list_movies=list_movies, movie_name_search=movie_name_search)
-        return render_template("add_movie.html", user_id=user_id, movie_rating="5", movie_name_search=movie_name_search)
+            return render_template("add_movie.html", user_id=user_id, list_movies=list_movies,
+                                    movie_name_search=movie_name_search)
+        return render_template("add_movie.html", user_id=user_id, movie_rating="5",
+                                movie_name_search=movie_name_search)
     except NoResultFound as e:
         return render_template("404.html", error=str(e))
     except Exception as e:
         return render_template("404.html", error=str(e))
 
 
-@app.route("/users/<int:update_user_id>/update_movie/<int:update_movie_id>", methods=["GET","POST", "PUT"])
+@app.route("/users/<int:update_user_id>/update_movie/<int:update_movie_id>", 
+           methods=["GET","POST", "PUT"])
 def update_user_movie(update_user_id, update_movie_id):
     """ this route display a form allowing for the updating of 
     details of a specific movie in a user list"""
     try:    
-        movie_user = data_manager.get_user_movie(update_user_id, update_movie_id)
+        movie_user = data_manager._get_user_movie(update_user_id, update_movie_id)
         if request.method == "POST" and request.form.get("_method") == "PUT":
-            movie = data_manager.update_movie(
+            movie = data_manager._update_movie(
                 user_id = update_user_id,
                 movie_id = update_movie_id,
                 movie_name = request.form.get("movie_name"),
                 movie_director = request.form.get("movie_director"),
                 movie_year = int(request.form.get("movie_year")),
-                movie_rating = int(request.form.get("movie_rating")),
+                movie_rating = float(request.form.get("movie_rating")),
                 movie_poster = request.form.get("movie_poster"),
                 movie_imdb_id = request.form.get("movie_imdb_id")
             )
@@ -142,7 +144,7 @@ def update_user_movie(update_user_id, update_movie_id):
 @app.route("/users/<int:user_id>/delete_movie/<int:movie_id>", methods=["GET", "POST"])
 def delete_movie(user_id, movie_id):
     try:
-        if data_manager.delete_movie(movie_id, user_id):
+        if data_manager._delete_movie(movie_id, user_id):
             return redirect(url_for("user_movies", user_id=user_id))
     except Exception as e:
         return render_template("404.html", error=str(e))

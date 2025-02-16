@@ -20,27 +20,27 @@ class SQLiteDataManager(DataMangerInterface):
         Base.metadata.create_all(self.engine)
 
 
-    def get_all_users(self):
+    def _get_all_users(self):
         """ This function return a list of all users 
         in the database"""
         all_users = self.session.query(User).all()
         return all_users
     
 
-    def get_user_info(self, id_user):
+    def _get_user_info(self, id_user):
         """ This function return the information from a user"""
         return self.session.query(User).filter(User.id == id_user).one()
 
 
-    def get_user_movies(self, search_id_user: int):
+    def _get_user_movies(self, search_id_user: int):
         """ This function a list of all movies of a specific user"""
         # Check if user exist 
-        if self.get_user_info(search_id_user):    
+        if self._get_user_info(search_id_user):    
             user_movies = self.session.query(Movie).filter(Movie.id_user == search_id_user).all()
             return user_movies
         
     
-    def add_user(self, user_name: str):
+    def _add_user(self, user_name: str):
         """ This function add a new user in the database"""
         try: 
             if not user_name:
@@ -57,8 +57,8 @@ class SQLiteDataManager(DataMangerInterface):
             raise Exception(f"Unexpected error while adding user: {str(e)}")
 
 
-    def add_movie(self,movie_id_user, movie_name, movie_director, movie_year, movie_rating,movie_poster, 
-                  movie_imdb_id ):
+    def _add_movie(self,movie_id_user, movie_name, movie_director, movie_year, 
+                   movie_rating,movie_poster, movie_imdb_id ):
         """ This function add a new movie in the database"""
         try: 
             new_movie = Movie(
@@ -78,7 +78,7 @@ class SQLiteDataManager(DataMangerInterface):
             raise Exception(f"Unexpected error adding the movie: {str(e)}")
 
 
-    def get_user_movie(self, user_id, movie_id):
+    def _get_user_movie(self, user_id, movie_id):
         """ This function return the details of a specific movie in the database"""
         query = self.session.query(User, Movie).join(Movie).filter(
             User.id ==user_id,
@@ -89,9 +89,9 @@ class SQLiteDataManager(DataMangerInterface):
         raise ValueError(f"movie id: {movie_id} or user id: {user_id} not exist!")
 
 
-    def update_movie(self,user_id, movie_id: int, movie_name: str = None, movie_director: str = None,
-                      movie_year: int = None, movie_rating: int = None, movie_poster:str=None, 
-                      movie_imdb_id:str=None):
+    def _update_movie(self,user_id, movie_id: int, movie_name: str = None, 
+                      movie_director: str = None, movie_year: int = None, 
+                      movie_rating: int = None, movie_poster: str = None, movie_imdb_id: str = None):
         """ This function update the datails of a 
         specific movie in the database"""
         movie = self.session.query(Movie).filter(
@@ -116,7 +116,7 @@ class SQLiteDataManager(DataMangerInterface):
         raise ValueError(f"movie id: {movie_id} or user id: {user_id} not exist!")
 
 
-    def delete_movie(self, movie_id, user_id):
+    def _delete_movie(self, movie_id, user_id):
         """ This function delete a specific movie from a 
         the database"""
         movie = self.session.query(Movie).filter(
@@ -130,7 +130,7 @@ class SQLiteDataManager(DataMangerInterface):
         raise ValueError(f"movie id: {movie_id} or user id: {user_id} not exist!")
     
 
-    def delete_usser(self, user_id):
+    def _delete_usser(self, user_id):
         """ This function delete a specific user from
         the database"""
         user = self.session.query(User).get(user_id)
