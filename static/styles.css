@@ -1,0 +1,21 @@
+body {
+    font-family: "Delius", serif;
+}
+.custom-wrapper {
+    background-color: #001d3d; /* Dark Gray */
+    color: #e09f3e; /* Gold */
+}
+.custom-form{
+    background-color: #001d3d;
+    color: #e09f3e;
+}
+.btn-primary{
+    background-color: #e09f3e;
+    color: #001d3d;
+    border-color: #e09f3e;
+}
+.btn-primary:hover {
+    background-color: #fcbf49;
+    border-color: #fcbf49;
+}
+

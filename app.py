@@ -8,22 +8,17 @@ app = Flask(__name__)
 data_manager = SQLiteDataManager("moviwebapp.sqlite")
 
 
-# data_manager.add_user("elisa")
-# data_manager.add_movie("twilight", "Catherine Hardwicke", 2008, 10, 1)
-# new_data_manager.add_movie("f", " Hake", 2008, 10, 1)
-# users = new_data_manager.get_all_users()
-# for user in users:
-#     print(user)
-# movies = new_data_manager.get_user_movies(1)
-# for movie in movies:
-#     print(movie)
-#new_data_manager.update_movie(movie_id=1, movie_name="Twilight")
-#new_data_manager.delete_movie(2)
-
-
-@app.route("/")
+@app.route("/", methods=["GET"])
 def home():
-    return "Welcome to MovieWeb App!"
+    user_name = request.args.get("user_name","")
+    if user_name:
+        users = data_manager._get_all_users()
+        for user in users:
+            if user_name == user.name:
+                return redirect(url_for("user_movies", user_id=user.id)) 
+        message = f"User {user_name} not exist!" 
+        return render_template("home.html", message=message)
+    return render_template("home.html")
 
 
 @app.route("/users", methods=["GET"])
@@ -89,16 +84,16 @@ def add_movie(user_id):
             name = request.form.get("movie_name")
             director = request.form.get("movie_director")
             movie_year = request.form.get("movie_year")
-            year = int(movie_year) if movie_year != "None" else None
+            year = int(movie_year) if movie_year.isdigit() else 0
             rating_movie = request.form.get("movie_rating")
-            rating = float(rating_movie) if rating_movie != "None" else 0
+            rating = float(rating_movie)
             poster = request.form.get("movie_poster")
             imdb_id = request.form.get("movie_imdb_id")
             data_manager._add_movie(user_id, name, director, year, rating, poster, imdb_id)
             movie_name_search = ""
             return redirect(url_for("user_movies",user_id=user_id))
         if movie_name_search:
-            list_movies = OMDb_api.request_movie(movie_name_search)
+            list_movies = OMDb_api.request_movie_search(movie_name_search)
             print(type(list_movies))
             return render_template("add_movie.html", user_id=user_id, list_movies=list_movies,
                                     movie_name_search=movie_name_search)

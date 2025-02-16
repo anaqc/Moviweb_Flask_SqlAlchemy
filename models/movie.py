@@ -27,9 +27,9 @@ class Movie(Base):
         self.imdb_id = imdb_id
         now_year = datetime.datetime.now().year
         if self.year and not 0 <= self.year <= now_year:
-            raise ValueError("invalid year")
+            raise ValueError(f"invalid year: {self.year}")
         if self.rating and not 0 <= self.rating <= 10:
-            raise ValueError("invalid rating range")
+            raise ValueError(f"invalid rating range: {self.rating}")
         
     
     def __str__(self):

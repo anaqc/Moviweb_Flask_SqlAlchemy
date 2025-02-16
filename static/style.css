@@ -1,9 +1,9 @@
 body {
     background: #F5F5F0;
     color: black;
-    font-family: Monaco;
-  }
-  
+    font-family: "Delius", serif;
+  } 
+
   .list-movies-title {
     padding: 10px 0;
     background: PaleVioletRed;
