@@ -25,7 +25,7 @@ class SQLiteDataManager(DataMangerInterface):
         in the database"""
         all_users = self.session.query(User).all()
         return all_users
-    
+
 
     def _get_user_info(self, id_user):
         """ This function return the information from a user"""

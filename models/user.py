@@ -24,7 +24,7 @@ class User(Base):
 
 
     def verify_password(self, password):
-        return bcrypt_sha256.verify(password, self.pasword_hash)
+        return bcrypt_sha256.verify(password, self.password_hash)
 
 
     def __str__(self):

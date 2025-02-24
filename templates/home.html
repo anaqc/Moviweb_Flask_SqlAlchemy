@@ -18,7 +18,7 @@
                 <h1>Welcome to MovieWeb App!</h1>
             </div> 
             <!-- Sign-In Form -->
-            <form action="{{url_for('home')}}" method="GET">
+            <form action="{{url_for('home')}}" method="POST">
                 <div class="custom-form card p-4 shadow-sm" style="width: 350px;">
                     <h3 class="text-center mb-3">Sign In</h3>
                     <!-- Username Input -->
@@ -26,7 +26,10 @@
                         <input type="text" class="form-control" id="user_name" name="user_name" placeholder="Username">
                         <label for="user_name">Enter your username</label>
                     </div>      
-                    <!-- Sign In Button -->
+                    <div class="form-floating mb-3">
+                        <input type="password" class="form-control" id="user_password" name="user_password" placeholder="Userpassword">
+                        <label for="user_password">Enter a password</label>
+                    </div>
                     <button class="btn btn-primary w-100">Sign In</button>
                     <!-- Extra Links -->
                     <div class="text-center mt-3">

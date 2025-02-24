@@ -8,13 +8,14 @@ app = Flask(__name__)
 data_manager = SQLiteDataManager("moviwebapp.sqlite")
 
 
-@app.route("/", methods=["GET"])
+@app.route("/", methods=["GET","POST"])
 def home():
-    user_name = request.args.get("user_name","")
+    user_name = request.form.get("user_name","")
+    user_password = request.form.get("user_password")
     if user_name:
         users = data_manager._get_all_users()
         for user in users:
-            if user_name == user.name:
+            if user_name == user.name and user.verify_password(user_password):
                 return redirect(url_for("user_movies", user_id=user.id)) 
         message = f"User {user_name} not exist!" 
         return render_template("home.html", message=message)
