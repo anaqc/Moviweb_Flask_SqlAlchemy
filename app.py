@@ -92,7 +92,6 @@ def add_movie(user_id):
             poster = request.form.get("movie_poster")
             imdb_id = request.form.get("movie_imdb_id")
             genres = request.form.get("movie_genres").split(", ")
-            print("-genre-",genres)
             data_manager._add_movie(user_id, name, director, year, rating, poster, imdb_id, genres)
             movie_name_search = ""
             return redirect(url_for("user_movies",user_id=user_id))

@@ -56,6 +56,7 @@ class OMDb_api:
             movie_director = movie_info.get("Director")
             movie_poster = movie_info.get("Poster")
             movie_genre = movie_info.get("Genre")
+            movie_type = movie_info.get("Type")
             new_data.append({
                 "Title" : movie_info.get("Title"),
                 "Director" : movie_director if movie_director != "None" else "",
@@ -63,7 +64,8 @@ class OMDb_api:
                 "imdbRating" : OMDb_api._get_validate_rating(movie_info.get("imdbRating")),
                 "Poster" : movie_poster if movie_poster != "None" else "",
                 "imdbID" : movie_imdbID if movie_imdbID != "None" else "",
-                "Genre" : movie_genre if movie_genre != "None" else ""
+                "Genre" : movie_genre if movie_genre != "None" else "",
+                "Type": movie_type if movie_type != "None" else "" 
             })
         return new_data
 

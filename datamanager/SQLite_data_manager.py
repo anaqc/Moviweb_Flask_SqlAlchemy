@@ -95,7 +95,7 @@ class SQLiteDataManager(DataMangerInterface):
         """ This function check if a genre exist in the db and if not create a new genre"""
         return self.session.query(Genre).filter(Genre.name == genre.capitalize()).first()
     
-    
+
     def _get_user_movie(self, user_id, movie_id):
         """ This function return the details of a specific movie in the database"""
         query = self.session.query(User, Movie).join(Movie).filter(
@@ -174,5 +174,8 @@ class SQLiteDataManager(DataMangerInterface):
     def _get_all_movie_genres(self):
         """ this function get a list of all the movie genres"""
         return self.session.query(Genre).all()
+    
+
+    
 
 
