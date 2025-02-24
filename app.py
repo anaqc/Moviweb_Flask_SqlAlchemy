@@ -65,7 +65,7 @@ def add_user():
             if data_manager._add_user(name, password):
                 return render_template("home.html")
             else:
-                message = f"User {name} already exist!"
+                message = f"User {name} or password incorrect!"
             return render_template("add_user.html", message=message)
         return render_template("add_user.html")
     except IOError as e:
@@ -91,16 +91,36 @@ def add_movie(user_id):
             rating = float(rating_movie)
             poster = request.form.get("movie_poster")
             imdb_id = request.form.get("movie_imdb_id")
-            data_manager._add_movie(user_id, name, director, year, rating, poster, imdb_id)
+            genres = request.form.get("movie_genres").split(", ")
+            print("-genre-",genres)
+            data_manager._add_movie(user_id, name, director, year, rating, poster, imdb_id, genres)
             movie_name_search = ""
             return redirect(url_for("user_movies",user_id=user_id))
         if movie_name_search:
             list_movies = OMDb_api.request_movie_search(movie_name_search)
-            print(type(list_movies))
+    
             return render_template("add_movie.html", user_id=user_id, list_movies=list_movies,
                                     movie_name_search=movie_name_search)
         return render_template("add_movie.html", user_id=user_id, movie_rating="5",
                                 movie_name_search=movie_name_search)
+    except NoResultFound as e:
+        return render_template("404.html", error=str(e))
+    except Exception as e:
+        return render_template("404.html", error=str(e))
+
+
+@app.route("/movie_genre", methods=["GET", "POST"])
+def movie_genre():
+    """ This route display a form to add a movie genre and the alist of all the genres added"""
+    try:
+        movie_genres = data_manager._get_all_movie_genres()
+        if request.method == "POST":
+            name = request.form.get("genre_name")
+            details = request.form.get("genre_details")
+            data_manager._add_genre(name, details)
+            return render_template("movie_genre.html", movie_genres=movie_genres)
+        return render_template("movie_genre.html", movie_genres=movie_genres)
+        
     except NoResultFound as e:
         return render_template("404.html", error=str(e))
     except Exception as e:

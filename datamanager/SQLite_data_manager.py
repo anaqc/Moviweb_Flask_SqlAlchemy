@@ -2,7 +2,7 @@ from sqlalchemy import create_engine, exc
 from datamanager.data_manager_interface import DataMangerInterface
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import SQLAlchemyError, NoResultFound
-from models.movie import Movie
+from models.movie import Movie, Genre
 from models.user import User
 from models.base import Base
 
@@ -60,9 +60,19 @@ class SQLiteDataManager(DataMangerInterface):
 
 
     def _add_movie(self,movie_id_user, movie_name, movie_director, movie_year, 
-                   movie_rating,movie_poster, movie_imdb_id ):
+                   movie_rating,movie_poster, movie_imdb_id, movie_genres):
         """ This function add a new movie in the database"""
         try: 
+            list_genres = []
+
+            for genre in movie_genres: 
+                if self._check_genre(genre):
+                    list_genres.append(self.session.query(Genre).filter(
+                        Genre.name == genre.capitalize()).one())
+                else:
+                    new_genre = self._add_genre(genre.capitalize())
+                    list_genres.append(new_genre)
+            print(list_genres)
             new_movie = Movie(
                             name=movie_name,
                             director=movie_director,
@@ -70,8 +80,9 @@ class SQLiteDataManager(DataMangerInterface):
                             rating=movie_rating,
                             poster=movie_poster,
                             imdb_id=movie_imdb_id,
-                            id_user=movie_id_user 
+                            id_user=movie_id_user
                         )
+            new_movie.genres.extend(list_genres)
             self.session.add(new_movie)
             self.session.commit()
             return new_movie
@@ -80,6 +91,11 @@ class SQLiteDataManager(DataMangerInterface):
             raise Exception(f"Unexpected error adding the movie: {str(e)}")
 
 
+    def _check_genre(self, genre):
+        """ This function check if a genre exist in the db and if not create a new genre"""
+        return self.session.query(Genre).filter(Genre.name == genre.capitalize()).first()
+    
+    
     def _get_user_movie(self, user_id, movie_id):
         """ This function return the details of a specific movie in the database"""
         query = self.session.query(User, Movie).join(Movie).filter(
@@ -141,4 +157,22 @@ class SQLiteDataManager(DataMangerInterface):
             self.session.commit()
             return True
         raise ValueError(f"User id: {user_id} not exist!")
+    
+
+    def _add_genre(self, name, details=None):
+        """ Tjis function add a new genre in the database"""
+        try: 
+            new_genre = Genre(name.capitalize(), details)
+            self.session.add(new_genre)
+            self.session.commit()
+            return new_genre
+        except Exception as e:
+            self.session.rollback()
+            raise Exception(f"Unexpected error adding the movie: {str(e)}")
+        
+
+    def _get_all_movie_genres(self):
+        """ this function get a list of all the movie genres"""
+        return self.session.query(Genre).all()
+
 
