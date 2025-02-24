@@ -60,7 +60,8 @@ def add_user():
     try:
         if request.method == "POST":
             name = request.form.get("user_name")
-            if data_manager._add_user(name):
+            password = request.form.get("user_password")
+            if data_manager._add_user(name, password):
                 return render_template("home.html")
             else:
                 message = f"User {name} already exist!"

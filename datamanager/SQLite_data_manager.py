@@ -40,7 +40,7 @@ class SQLiteDataManager(DataMangerInterface):
             return user_movies
         
     
-    def _add_user(self, user_name: str):
+    def _add_user(self, user_name: str, user_password: str):
         """ This function add a new user in the database"""
         try: 
             if not user_name:
@@ -48,7 +48,9 @@ class SQLiteDataManager(DataMangerInterface):
             user_name_exist = self.session.query(User).filter(User.name == user_name).first()
             if user_name_exist:
                 return None
+            
             new_user = User(name=user_name)
+            new_user.password = user_password
             self.session.add(new_user)
             self.session.commit()
             return new_user
