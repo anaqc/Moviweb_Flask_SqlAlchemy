@@ -41,7 +41,8 @@ body {
     width: 140px;
   }
 
-  .buttons-group {
+  .buttons-group,
+  .search-group {
     display: flex;
     flex-wrap: wrap;
   }
