@@ -2,7 +2,7 @@ from sqlalchemy import create_engine, exc
 from datamanager.data_manager_interface import DataMangerInterface
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import SQLAlchemyError, NoResultFound
-from models.movie import Movie, Genre
+from models.movie import Movie, Genre, Review
 from models.user import User
 from models.base import Base
 
@@ -168,12 +168,39 @@ class SQLiteDataManager(DataMangerInterface):
             return new_genre
         except Exception as e:
             self.session.rollback()
-            raise Exception(f"Unexpected error adding the movie: {str(e)}")
+            raise Exception(f"Unexpected error adding the movie genre: {str(e)}")
         
 
     def _get_all_movie_genres(self):
         """ this function get a list of all the movie genres"""
         return self.session.query(Genre).all()
+    
+
+    def _add_review(self, user_id, movie_id, rating, review_text):
+        """ This functi0on add a new review to the database"""
+        try:
+            new_review = Review(user_id, movie_id, rating, review_text)
+            self.session.add(new_review)
+            self.session.commit()
+            return new_review
+        except Exception as e:
+            self.session.rollback()
+            raise Exception(f"unexpected error adding the review: {str(e)}")
+    
+    def _update_review(self, review_id, user_id, movie_id, rating: float, review_text:str = None):
+        """ This function update the movie  rating and review text"""
+        review = self.sessiom.query(Review).filter(Review.id == review_id).first()
+        if review:
+            if rating:
+                review.rating = rating
+            if review_text:
+                review.review_text = review_text
+            self.session.commit()
+            return review
+        raise ValueError(f"review id: {review_id} not exist!")
+    
+
+    
     
 
     
