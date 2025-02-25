@@ -171,6 +171,16 @@ class SQLiteDataManager(DataMangerInterface):
             raise Exception(f"Unexpected error adding the movie genre: {str(e)}")
         
 
+    def _delete_genre(self, genre_id):
+        """ This function delete the genre by id"""
+        genre = self.session.query(Genre).get(genre_id)
+        if genre:
+            self.session.delete(genre)
+            self.session.commit()
+            return True
+        raise ValueError(f"Genre id: {genre_id} not exist!")
+        
+        
     def _get_all_movie_genres(self):
         """ this function get a list of all the movie genres"""
         return self.session.query(Genre).all()

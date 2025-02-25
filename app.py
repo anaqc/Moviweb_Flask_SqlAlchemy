@@ -117,11 +117,21 @@ def movie_genre():
             name = request.form.get("genre_name")
             details = request.form.get("genre_details")
             data_manager._add_genre(name, details)
-            return render_template("movie_genre.html", movie_genres=movie_genres)
+            return redirect(url_for("movie_genre"))
         return render_template("movie_genre.html", movie_genres=movie_genres)
         
     except NoResultFound as e:
         return render_template("404.html", error=str(e))
+    except Exception as e:
+        return render_template("404.html", error=str(e))
+
+
+@app.route("/delete_genre/<int:genre_id>", methods=["POST"])
+def delete_genre(genre_id):
+    """ This route delete a genre fron db"""
+    try:
+        if data_manager._delete_genre(genre_id):
+            return redirect(url_for("movie_genre"))
     except Exception as e:
         return render_template("404.html", error=str(e))
 
@@ -216,6 +226,7 @@ def update_review(user_id, movie_id):
     except Exception as e:
         return render_template("404.html", error=str(e))
 
+
 @app.route("/users/<int:user_id>/delete_review/<int:movie_id>", methods=["POST"])
 def delete_review(user_id, movie_id):
     try:
@@ -223,6 +234,7 @@ def delete_review(user_id, movie_id):
             return redirect(url_for("user_movies", user_id=user_id))
     except Exception as e:
         return render_template("404.html", error=str(e))
+
 
 @app.errorhandler(404)
 def page_not_found(e):
