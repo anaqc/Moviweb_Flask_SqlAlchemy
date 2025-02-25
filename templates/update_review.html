@@ -22,13 +22,10 @@
                         <div class="nav-item">
                             <a class="nav-link" href="{{url_for('add_movie', user_id=user_id)}}">Add movie</a>
                         </div>
+                        <div class="nav-item">
+                            <a class="nav-link" href="{{url_for('home')}}">Logout</a>
+                        </div>
                     </div>
-                    <form role="search" action="{{ url_for('add_movie', user_id=user_id)}}" method="GET"> 
-                        <div class="search-group">
-                            <input class="" type="text" name="movie_name_search" id="movie_name_search" placeholder="Search in Omdb API">
-                            <input class="btn btn-primary btn-sm w-250 px-1" type="submit" value="Search">
-                        </div>  
-                    </form>
               </div>
             </div>
         </nav>
@@ -71,6 +68,7 @@
                                         <input class="btn btn-primary w-50" type="submit" value="Update review">
                                     </div>  
                                 </form>
+                                <br>
                                 <form action='{{ url_for("delete_review", user_id=movie_review.user_id, movie_id=movie_review.movie_id) }}' method="post">
                                     <div class="d-grid">
                                         <input class="btn btn-primary w-50" type="submit" value="Delete review">
