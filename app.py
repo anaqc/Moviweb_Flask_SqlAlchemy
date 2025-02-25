@@ -31,7 +31,6 @@ def list_users():
         return render_template("users.html", users=users)
     except IOError as e:
         # Code to handle the exception
-        print("An IOError occurred: ", str(e))
         return render_template("404.html", error=str(e))
     except Exception as e:
         return render_template("404.html", error=str(e))
@@ -48,7 +47,6 @@ def user_movies(user_id):
         return render_template("404.html")
     except IOError as e:
         # Code to handle the exception
-        print("An IOError occurred: ", str(e))
         return render_template("404.html", error=str(e))
     except Exception as e:
         return render_template("404.html", error=str(e))
@@ -70,7 +68,6 @@ def add_user():
         return render_template("add_user.html")
     except IOError as e:
         # Code to handle the exception
-        print("An IOError occurred: ", str(e))
         return render_template("404.html", error=str(e))
     except Exception as e:
         return render_template("404.html", error=str(e))
@@ -119,7 +116,6 @@ def movie_genre():
             data_manager._add_genre(name, details)
             return redirect(url_for("movie_genre"))
         return render_template("movie_genre.html", movie_genres=movie_genres)
-        
     except NoResultFound as e:
         return render_template("404.html", error=str(e))
     except Exception as e:
@@ -161,7 +157,6 @@ def update_user_movie(update_user_id, update_movie_id):
         return render_template("404.html", error=str(e))
     except IOError as e:
         # Code to handle the exception
-        print("An IOError occurred: ", str(e))
         return render_template("404.html", error=str(e))
     except Exception as e:
         return render_template("404.html", error=str(e))
@@ -169,6 +164,7 @@ def update_user_movie(update_user_id, update_movie_id):
 
 @app.route("/users/<int:user_id>/delete_movie/<int:movie_id>", methods=["GET", "POST"])
 def delete_movie(user_id, movie_id):
+    """ This route delete a movie by user_id and movie_id"""
     try:
         if data_manager._delete_movie(movie_id, user_id):
             return redirect(url_for("user_movies", user_id=user_id))
@@ -193,7 +189,6 @@ def add_review(user_id, movie_id):
         return render_template("404.html", error=str(e))
     except IOError as e:
         # Code to handle the exception
-        print("An IOError occurred: ", str(e))
         return render_template("404.html", error=str(e))
     except Exception as e:
         return render_template("404.html", error=str(e))
@@ -221,7 +216,6 @@ def update_review(user_id, movie_id):
         return render_template("404.html", error=str(e))
     except IOError as e:
         # Code to handle the exception
-        print("An IOError occurred: ", str(e))
         return render_template("404.html", error=str(e))
     except Exception as e:
         return render_template("404.html", error=str(e))

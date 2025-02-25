@@ -54,3 +54,41 @@ class DataMangerInterface(ABC):
         """ This function delete a specific user from
         the database"""
         ...
+    
+
+    def _add_genre(self, name, details=None):
+        """ This function add a new genre in the database"""
+        ...
+        
+
+    def _delete_genre(self, genre_id):
+        """ This function delete the genre by id"""
+        ...
+        
+        
+    def _get_all_movie_genres(self):
+        """ this function get a list of all the movie genres"""
+        ...
+    
+
+    def _add_review(self, user_id, movie_id, awards, review_text):
+        """ This functi0on add a new review to the database"""
+        ...
+    
+    
+    def _update_review(self, review_id, awards, review_text:str = None):
+        """ This function update the movie  rating and review text"""
+        ...
+    
+
+    def _delete_review(self, user_id, movie_id):
+        """ This function delete a specific review from
+        the database"""
+        ...
+    
+
+    def _get_movie_review(self, user_id, movie_id):
+        """ This function return the details of a movie review"""
+        ...
+
+        

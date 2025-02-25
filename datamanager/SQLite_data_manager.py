@@ -160,7 +160,7 @@ class SQLiteDataManager(DataMangerInterface):
     
 
     def _add_genre(self, name, details=None):
-        """ Tjis function add a new genre in the database"""
+        """ This function add a new genre in the database"""
         try: 
             new_genre = Genre(name.capitalize(), details)
             self.session.add(new_genre)
