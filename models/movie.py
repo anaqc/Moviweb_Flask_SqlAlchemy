@@ -18,7 +18,7 @@ class Movie(Base):
     name = Column(String(150))
     director = Column(String(100))
     year = Column(Integer)
-    #rating = Column(Float)
+    rating = Column(Float)
     poster = Column(String(200))
     imdb_id = Column(String(15))
     id_user = Column(Integer, ForeignKey("users.id"), nullable=True)
@@ -28,19 +28,19 @@ class Movie(Base):
     genres = relationship("Genre", secondary="movie_genres", back_populates="movies")
 
 
-    def __init__(self, id_user, name, director=None, year=None, poster=None,imdb_id=None ):
+    def __init__(self, id_user, name, director=None, year=None, rating=0, poster=None,imdb_id=None):
         self.name = name
         self.director = director
         self.year = year
-        #self.rating = rating
+        self.rating = rating
         self.id_user = id_user
         self.poster = poster
         self.imdb_id = imdb_id
         now_year = datetime.datetime.now().year
         if self.year and not 0 <= self.year <= now_year:
             raise ValueError(f"invalid year: {self.year}")
-        # if self.rating and not 0 <= self.rating <= 10:
-        #     raise ValueError(f"invalid rating range: {self.rating}")
+        if self.rating and not 0 <= self.rating <= 10:
+            raise ValueError(f"invalid rating range: {self.rating}")
         
     
     def __str__(self):
@@ -70,14 +70,13 @@ class Review(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
     movie_id = Column(Integer, ForeignKey("movies.id"), nullable=True)
-    rating = Column(Float)
+    awards = Column(String(200))
     review_text = Column(String(500))
 
 
-    def __init__(self, user_id, movie_id, rating, review_text):
+    def __init__(self, user_id, movie_id, awards, review_text):
         self.user_id = user_id
         self.movie_id = movie_id
-        self.rating = rating
+        self.awards = awards
         self.review_text = review_text
-        if self.rating and not 0 <= self.rating <= 10:
-            raise ValueError(f"invalid rating range: {self.rating}")
+

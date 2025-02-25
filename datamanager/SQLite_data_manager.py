@@ -176,10 +176,10 @@ class SQLiteDataManager(DataMangerInterface):
         return self.session.query(Genre).all()
     
 
-    def _add_review(self, user_id, movie_id, rating, review_text):
+    def _add_review(self, user_id, movie_id, awards, review_text):
         """ This functi0on add a new review to the database"""
         try:
-            new_review = Review(user_id, movie_id, rating, review_text)
+            new_review = Review(user_id, movie_id, awards, review_text)
             self.session.add(new_review)
             self.session.commit()
             return new_review
@@ -187,12 +187,13 @@ class SQLiteDataManager(DataMangerInterface):
             self.session.rollback()
             raise Exception(f"unexpected error adding the review: {str(e)}")
     
-    def _update_review(self, review_id, user_id, movie_id, rating: float, review_text:str = None):
+    
+    def _update_review(self, review_id, user_id, movie_id, awards, review_text:str = None):
         """ This function update the movie  rating and review text"""
         review = self.sessiom.query(Review).filter(Review.id == review_id).first()
         if review:
-            if rating:
-                review.rating = rating
+            if awards:
+                review.awards = awards
             if review_text:
                 review.review_text = review_text
             self.session.commit()
@@ -200,7 +201,15 @@ class SQLiteDataManager(DataMangerInterface):
         raise ValueError(f"review id: {review_id} not exist!")
     
 
-    
+    def _delete_review(self, review_id):
+        """ This function delete a specific review from
+        the database"""
+        review = self.session.query(User).get(review_id)
+        if review:
+            self.session.delete(review)
+            self.session.commit()
+            return True
+        raise ValueError(f"Review id: {review_id} not exist!")
     
 
     

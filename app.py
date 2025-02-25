@@ -166,6 +166,29 @@ def delete_movie(user_id, movie_id):
         return render_template("404.html", error=str(e))
 
 
+@app.route("/users/<int:user_id>/add_review/<int:movie_id>", methods=["GET", "POST"])
+def add_review(user_id, movie_id):
+    """ This route add a review to a specific movie"""
+    try:
+        if request.method == "POST":
+            awards = request.form.get("movie_awards")
+            review_text = request.form.get("movie_review_text")
+            movie_id = request.form.get("movie_id")
+            user_id = request.form.get("user_id")
+            data_manager._add_review(user_id, movie_id, awards,review_text)
+            return redirect(url_for("user_movies", user_id=user_id))
+        return render_template("add_review.html", user_id=user_id, movie_id=movie_id)
+    except ValueError as e:
+        return render_template("404.html", error=str(e))
+    except IOError as e:
+        # Code to handle the exception
+        print("An IOError occurred: ", str(e))
+        return render_template("404.html", error=str(e))
+    except Exception as e:
+        return render_template("404.html", error=str(e))
+
+
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template("404.html", error=str(e)), 404
