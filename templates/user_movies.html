@@ -60,6 +60,11 @@
                                             <input class="btn btn-primary btn-sm w-250 px-1" type="submit" value="Delete">
                                         </form> 
                                     </div>
+                                    <div class="movie-review">
+                                        <form action="{{ url_for('update_review', user_id=movie.id_user, movie_id=movie.id)}}" method="POST">
+                                            <input class="btn btn-primary btn-sm w-250 px-1" type="submit" value="Review">
+                                        </form> 
+                                    </div>
                                 </div>
 
                             </div>    

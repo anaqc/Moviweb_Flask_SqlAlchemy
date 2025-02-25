@@ -188,9 +188,9 @@ class SQLiteDataManager(DataMangerInterface):
             raise Exception(f"unexpected error adding the review: {str(e)}")
     
     
-    def _update_review(self, review_id, user_id, movie_id, awards, review_text:str = None):
+    def _update_review(self, review_id, awards, review_text:str = None):
         """ This function update the movie  rating and review text"""
-        review = self.sessiom.query(Review).filter(Review.id == review_id).first()
+        review = self.session.query(Review).filter(Review.id == review_id).first()
         if review:
             if awards:
                 review.awards = awards
@@ -201,17 +201,27 @@ class SQLiteDataManager(DataMangerInterface):
         raise ValueError(f"review id: {review_id} not exist!")
     
 
-    def _delete_review(self, review_id):
+    def _delete_review(self, user_id, movie_id):
         """ This function delete a specific review from
         the database"""
-        review = self.session.query(User).get(review_id)
+        review = self.session.query(Review).filter(
+            Review.movie_id == movie_id,
+            Review.user_id == user_id
+        ).first()
         if review:
             self.session.delete(review)
             self.session.commit()
             return True
-        raise ValueError(f"Review id: {review_id} not exist!")
+        raise ValueError(f"movie id: {movie_id} or user id: {user_id} not exist!")
     
 
-    
+    def _get_movie_review(self, user_id, movie_id):
+        """ This function return the details of a movie review"""
+        review_movie = self.session.query(Review).filter((Review.user_id == user_id) &
+                                                          (Review.movie_id == movie_id)).first()
+        if review_movie:
+            return review_movie
+        return None
+
 
 

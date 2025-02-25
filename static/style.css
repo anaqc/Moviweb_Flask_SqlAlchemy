@@ -47,7 +47,8 @@ body {
     flex-wrap: wrap;
   }
   .movie-update,
-  .movie-delete {
+  .movie-delete,
+  .movie-review {
     margin-inline: 5px;
   }
   

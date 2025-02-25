@@ -56,7 +56,7 @@ def user_movies(user_id):
 
 @app.route("/add_user",methods=["GET","POST"])
 def add_user():
-    """ This route present a form that enables the addiotion
+    """ This route present a form that enables the addition
     of a new user to the MovieWeb App"""
     try:
         if request.method == "POST":
@@ -170,14 +170,15 @@ def delete_movie(user_id, movie_id):
 def add_review(user_id, movie_id):
     """ This route add a review to a specific movie"""
     try:
-        if request.method == "POST":
+        movie_user = data_manager._get_user_movie(user_id, movie_id)
+        if request.method == "POST" and request.form.get("movie_awards"):
             awards = request.form.get("movie_awards")
             review_text = request.form.get("movie_review_text")
             movie_id = request.form.get("movie_id")
             user_id = request.form.get("user_id")
             data_manager._add_review(user_id, movie_id, awards,review_text)
             return redirect(url_for("user_movies", user_id=user_id))
-        return render_template("add_review.html", user_id=user_id, movie_id=movie_id)
+        return render_template("add_review.html", movie_user=movie_user, user_id=user_id, movie_id=movie_id)
     except ValueError as e:
         return render_template("404.html", error=str(e))
     except IOError as e:
@@ -188,6 +189,40 @@ def add_review(user_id, movie_id):
         return render_template("404.html", error=str(e))
 
 
+@app.route("/users/<int:user_id>/update_review/<int:movie_id>",methods=["GET", "POST"])
+def update_review(user_id, movie_id):
+    """ This route display a form allowing for the updating of
+    details of a specific movie review"""
+    try:
+        movie_user = data_manager._get_user_movie(user_id, movie_id)
+        movie_review = data_manager._get_movie_review(user_id, movie_id)
+        if movie_review:
+            if request.method == "POST" and request.form.get("_method") == "PUT":
+                review = data_manager._update_review(
+                awards = request.form.get("movie_awards"),
+                review_text = request.form.get("movie_review_text"),
+                review_id=movie_review.id
+                )
+                if review:
+                    return redirect(url_for("user_movies", user_id=user_id))
+            return render_template("update_review.html", movie_review=movie_review, movie_user=movie_user, user_id=user_id)
+        return redirect(url_for("add_review", user_id=user_id, movie_id=movie_id))
+    except ValueError as e:
+        return render_template("404.html", error=str(e))
+    except IOError as e:
+        # Code to handle the exception
+        print("An IOError occurred: ", str(e))
+        return render_template("404.html", error=str(e))
+    except Exception as e:
+        return render_template("404.html", error=str(e))
+
+@app.route("/users/<int:user_id>/delete_review/<int:movie_id>", methods=["POST"])
+def delete_review(user_id, movie_id):
+    try:
+        if data_manager._delete_review(user_id, movie_id):
+            return redirect(url_for("user_movies", user_id=user_id))
+    except Exception as e:
+        return render_template("404.html", error=str(e))
 
 @app.errorhandler(404)
 def page_not_found(e):

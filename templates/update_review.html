@@ -38,11 +38,12 @@
                 <div class="col-md-6">
                     <div class="card">
                         <div class="card-header">
-                            <h4 class="text-center mb-0">Add movie review</h5>
+                            <h4 class="text-center mb-0">Update movie review</h5>
                         </div> 
                         <div class="card-body ">
                             <div class="form-container">
-                                <form action="{{ url_for('add_review', user_id=user_id, movie_id=movie_id)}}" method="POST">
+                                <form action="{{ url_for('update_review', user_id=movie_review.user_id, movie_id=movie_review.movie_id)}}" method="POST">
+                                    <input type="hidden" name="_method" value="PUT">  
                                     <div class="row mb-3">
                                         <a href="https://www.imdb.com/de/title/{{movie_user.imdb_id}}">
                                             <img class="movie-poster" src="{{movie_user.poster}}" alt="">
@@ -60,16 +61,19 @@
                                     </div>
                                     <div class="row mb-3">  
                                         <label for="movie_awards"> movie awards: </label>
-                                        <input class="form-control" type="text" name="movie_awards" id="movie_awards" required><br><br>
+                                        <input class="form-control" value="{{movie_review.awards}}" type="text" name="movie_awards" id="movie_awards" required><br><br>
                                     </div>
                                     <div class="row mb-3">
                                         <label for="movie_review_text">Review text:</label>
-                                        <textarea class="form-control" name="movie_review_text" id="movie_review_text" wrap="hard"></textarea><br><br>
+                                        <textarea class="form-control" name="movie_review_text" id="movie_review_text" wrap="hard">{{movie_review.review_text}}</textarea><br><br>
                                     </div>
                                     <div class="d-grid">
-                                        <input type="hidden" name="user_id" value="{{user_id}}">
-                                        <input type="hidden" name="movie_id" value="{{movie_id}}">
-                                        <input class="btn btn-primary w-50" type="submit" value="Add review">
+                                        <input class="btn btn-primary w-50" type="submit" value="Update review">
+                                    </div>  
+                                </form>
+                                <form action='{{ url_for("delete_review", user_id=movie_review.user_id, movie_id=movie_review.movie_id) }}' method="post">
+                                    <div class="d-grid">
+                                        <input class="btn btn-primary w-50" type="submit" value="Delete review">
                                     </div>  
                                 </form>
                             </div> 
