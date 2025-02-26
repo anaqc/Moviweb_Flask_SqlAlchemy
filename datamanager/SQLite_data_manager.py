@@ -72,7 +72,6 @@ class SQLiteDataManager(DataMangerInterface):
                 else:
                     new_genre = self._add_genre(genre.capitalize())
                     list_genres.append(new_genre)
-            print(list_genres)
             new_movie = Movie(
                             name=movie_name,
                             director=movie_director,

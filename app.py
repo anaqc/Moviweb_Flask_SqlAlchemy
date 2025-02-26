@@ -2,9 +2,11 @@ from flask import Flask, request, render_template, redirect, url_for
 from datamanager.SQLite_data_manager import SQLiteDataManager
 from sqlalchemy.exc import NoResultFound
 from datamanager.data_OMDb_API import OMDb_api
+from api import api # Importing the API blueprint
 
 
 app = Flask(__name__)
+app.register_blueprint(api, url_prefix="/api") # Registering the blueprint
 data_manager = SQLiteDataManager("moviwebapp.sqlite")
 
 
@@ -242,3 +244,4 @@ def internal_server_error(e):
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=5000, debug=True)
+
