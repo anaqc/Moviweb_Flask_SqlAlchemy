@@ -75,6 +75,17 @@ def add_user():
         return render_template("404.html", error=str(e))
 
 
+@app.route("/delete_user/<int:user_id>", methods=["POST"])
+def delete_user(user_id):
+    """ This route delete a user by id from the database"""
+    try:
+        user = data_manager._delete_usser(user_id)
+        if user:
+            redirect(url_for("list_users"))
+    except Exception as e:
+        return render_template("404.html", error=str(e))
+
+
 @app.route("/users/<int:user_id>/add_movie", methods=["GET", "POST"])
 def add_movie(user_id):
     """ This route display a form to add a new movie to a 
