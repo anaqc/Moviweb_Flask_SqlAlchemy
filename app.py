@@ -81,7 +81,7 @@ def delete_user(user_id):
     try:
         user = data_manager._delete_usser(user_id)
         if user:
-            redirect(url_for("list_users"))
+            return redirect(url_for("list_users"))
     except Exception as e:
         return render_template("404.html", error=str(e))
 
